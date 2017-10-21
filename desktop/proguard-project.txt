@@ -1,0 +1,82 @@
+## Inform ProGuard about Java Runtime
+
+-libraryjars <java.home>/lib/rt.jar
+
+## Keep main method
+
+-keepclasseswithmembers public class my.game.pkg.Main {
+    public static void main(java.lang.String[]);
+}
+
+## Keep LWJGL backend
+
+-keep class com.badlogic.gdx.backends.lwjgl.** { *; }
+-keep class org.lwjgl.** { *; }
+
+# Keep controller related classes
+
+-keep public class net.java.games.input.Controller
+-keep public class net.java.games.input.ControllerListener
+-keep public class net.java.games.input.Component
+-keep public class net.java.games.input.Component$Identifier
+-keep public class net.java.games.input.Component$Identifier$Button
+-keep public class net.java.games.input.Component$Identifier$Axis
+-keep public class net.java.games.input.Component$Identifier$Key
+-keep public class net.java.games.input.Event
+-keep public class net.java.games.input.Rumbler
+
+# Keep util related classes
+
+-keepclassmembers class java.lang.ClassLoader {
+    java.lang.String findLibrary(java.lang.String);
+}
+
+# Keep sound related classes
+
+-keepclassmembers class org.lwjgl.openal.* {
+    void initNativeStubs();
+}
+
+-keepclassmembers class com.badlogic.gdx.backends.lwjgl.audio.* {
+    <init>(com.badlogic.gdx.backends.lwjgl.audio.OpenALAudio,com.badlogic.gdx.files.FileHandle);
+}
+
+# Keep graphics related classes
+
+-keepclassmembers class org.lwjgl.opengl.CallbackUtil {
+    long getDebugCallbackKHR();
+    long getDebugOutputCallbackARB();
+    long getDebugOutputCallbackAMD();
+}
+
+-keepclassmembers class org.lwjgl.opengl.GlobalLock {
+    java.lang.Object lock;
+}
+
+-keep public class * extends java.awt.GraphicsDevice { *; }
+
+# Keep platforms related classes
+
+-keepclassmembers class org.lwjgl.opengl.WindowsDisplay {
+    long getHwnd();
+}
+
+# LibGDX on desktop runs emulated OpenGL, so OpenGL ES it isn't included nor used
+
+-dontwarn org.lwjgl.opengles.**
+
+# Seems that org.lwjgl.util.mapped is not used in Libgdx, so we can ignore warnings from it (about missing ASM)
+
+-dontwarn org.lwjgl.util.mapped.**
+-dontnote org.lwjgl.util.mapped.**
+
+# This is available only on one platform, and surely provided by it
+
+-dontwarn com.apple.eio.**
+-dontnote org.lwjgl.opengl.LinuxCanvasImplementation*
+
+# There are some classes using JNLP (networked launching isn't supported by our project template for now)
+
+-dontnote com.badlogic.gdx.backends.lwjgl.LwjglNativesLoader # lookup from javax.jnlp.ServiceManager
+-dontnote org.lwjgl.Sys*   # lookup from javax.jnlp.ServiceManager and showDocument from javax.jnlp.BasicService
+

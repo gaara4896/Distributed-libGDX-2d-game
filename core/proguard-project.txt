@@ -1,0 +1,118 @@
+## Entry point
+
+-keep public class my.game.pkg.Main
+
+## LibGDX
+
+-keep class com.badlogic.gdx.Application
+
+# Don't warn about optional
+
+-dontnote com.badlogic.gdx.physics.box2d.World
+
+# Needed descriptor classes
+
+-keep public class com.badlogic.gdx.ApplicationListener
+-keep public class com.badlogic.gdx.LifecycleListener
+-keep public class com.badlogic.gdx.InputProcessor
+-keep public class com.badlogic.gdx.files.FileHandle
+-keep public class com.badlogic.gdx.Files$FileType
+-keep public class com.badlogic.gdx.Graphics$DisplayMode
+-keep public class com.badlogic.gdx.Input$TextInputListener
+-keep public class com.badlogic.gdx.Input$Peripheral
+-keep public class com.badlogic.gdx.Net$HttpRequest
+-keep public class com.badlogic.gdx.Net$HttpResponseListener
+-keep public class com.badlogic.gdx.Net$Protocol
+-keep public class com.badlogic.gdx.net.SocketHints
+-keep public class com.badlogic.gdx.net.ServerSocketHints
+-keep public class com.badlogic.gdx.utils.Array
+-keep public class com.badlogic.gdx.audio.Music$OnCompletionListener
+-keep public class com.badlogic.gdx.graphics.Pixmap
+
+## Scala
+
+# See http://blog.scaloid.org/2014/10/scaloid-36-is-released.html
+
+-keepattributes Signature
+-dontwarn scala.collection.**
+
+# Port of Android rules from android-proguard.config (android-sdk-plugin)
+
+-dontobfuscate
+-dontoptimize
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+-verbose
+-flattenpackagehierarchy
+
+-dontnote scala.ScalaObject
+-dontnote org.xml.sax.EntityResolver
+-dontnote scala.concurrent.forkjoin.**
+-dontwarn scala.beans.ScalaBeanInfo
+-dontwarn scala.concurrent.**
+-dontnote scala.reflect.**
+-dontwarn scala.reflect.**
+-dontwarn scala.sys.process.package$
+
+-dontwarn **$$anonfun$*
+-dontwarn scala.collection.immutable.RedBlack$Empty
+-dontwarn scala.tools.**,plugintemplate.**
+
+-keep public class scala.reflect.ScalaSignature
+-keep public interface scala.ScalaObject
+
+-keepclassmembers class * {
+    ** MODULE$;
+}
+
+-keep class scala.collection.SeqLike {
+    public java.lang.String toString();
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinPool {
+    long eventCount;
+    int workerCounts;
+    int runControl;
+    scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode syncStack;
+    scala.concurrent.forkjoin.ForkJoinPool$WaitQueueNode spareStack;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinWorkerThread {
+    int base;
+    int sp;
+    int runState;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.ForkJoinTask {
+    int status;
+}
+
+-keepclassmembernames class scala.concurrent.forkjoin.LinkedTransferQueue {
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference head;
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference tail;
+    scala.concurrent.forkjoin.LinkedTransferQueue$PaddedAtomicReference cleanMe;
+}
+
+# Port of LibGDX rules from proguard-project.txt (LibGDX template)
+
+-dontwarn com.badlogic.gdx.utils.GdxBuild
+-dontwarn com.badlogic.gdx.physics.box2d.utils.Box2DBuild
+-dontwarn com.badlogic.gdx.jnigen.BuildTarget*
+
+-keepclassmembers class com.badlogic.gdx.physics.box2d.World {
+   boolean contactFilter(long, long);
+   void    beginContact(long);
+   void    endContact(long);
+   void    preSolve(long, long);
+   void    postSolve(long, long);
+   boolean reportFixture(long);
+   float   reportRayFixture(long, float, float, float, float, float);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepattributes *Annotation*
+
