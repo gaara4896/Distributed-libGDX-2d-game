@@ -11,6 +11,8 @@ import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
@@ -25,12 +27,17 @@ class MainGameScreen extends Screen{
 	private var currentPlayerSprite:Sprite = null
 	private var mapRenderer:OrthogonalTiledMapRenderer = null
 	private var camera:OrthographicCamera = null
+	var font:BitmapFont = null
+	var spriteBatch:SpriteBatch = null
 
 	/**
 	 * Execute when no screen is showed
 	 */
 	override def show{
 		setupViewport(10, 10)
+
+		font = new BitmapFont
+		spriteBatch = new SpriteBatch
 
 		camera = new OrthographicCamera()
 		camera.setToOrtho(false, MainGameScreen.VIEWPORT.viewportWidth, MainGameScreen.VIEWPORT.viewportHeight)
@@ -77,6 +84,9 @@ class MainGameScreen extends Screen{
 		mapRenderer.getBatch().begin()
 		mapRenderer.getBatch().draw(currentPlayerFrame, currentPlayerSprite.getX, currentPlayerSprite.getY, 1, 1)
 		mapRenderer.getBatch().end()
+		spriteBatch.begin
+		font.draw(spriteBatch, s"FPS:${Gdx.graphics.getFramesPerSecond}", 0, 480)
+		spriteBatch.end
 	}
 
 	/**
