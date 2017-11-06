@@ -1,6 +1,8 @@
 package my.game.pkg
 
 import com.badlogic.gdx.backends.lwjgl._
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Application
 import my.game.pkg.config.Settings
 
 object Main extends App {
@@ -8,5 +10,8 @@ object Main extends App {
     config.title = "distributed-libgdx-2d-game"
     config.height = Settings.height
     config.width = Settings.width
-    new LwjglApplication(new Distributedlibgdx2dgame, config)
+    val app:Application = new LwjglApplication(new Distributedlibgdx2dgame, config)
+
+    Gdx.app = app
+    Gdx.app.setLogLevel(Application.LOG_DEBUG)
 }
