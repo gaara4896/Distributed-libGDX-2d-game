@@ -108,10 +108,18 @@ class Player{
 		velocity.scl(delta)
 
 		currentDirection match{
-			case Direction.LEFT => nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
-			case Direction.RIGHT => nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
-			case Direction.UP => nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
-			case Direction.DOWN => nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
+			case Direction.LEFT => 
+				nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
+				nextPlayerPosition.y = currentPlayerPosition.y
+			case Direction.RIGHT => 
+				nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
+				nextPlayerPosition.y = currentPlayerPosition.y
+			case Direction.UP => 
+				nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
+				nextPlayerPosition.x = currentPlayerPosition.x
+			case Direction.DOWN => 
+				nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
+				nextPlayerPosition.x = currentPlayerPosition.x
 			case _ => 
 		}
 		velocity.scl(1 / delta)

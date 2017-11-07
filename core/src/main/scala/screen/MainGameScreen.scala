@@ -34,7 +34,7 @@ class MainGameScreen extends Screen{
 	 * Execute when no screen is showed
 	 */
 	override def show{
-		setupViewport(10, 10)
+		setupViewport(15, 15)
 
 		font = new BitmapFont
 		spriteBatch = new SpriteBatch
