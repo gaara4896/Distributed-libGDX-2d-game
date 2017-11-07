@@ -20,11 +20,11 @@ import scala.collection.JavaConverters._
 
 class MainGameScreen extends Screen{
 
-	private var controller:PlayerController = null
-	private var currentPlayerFrame:TextureRegion = null
-	private var currentPlayerSprite:Sprite = null
-	private var mapRenderer:OrthogonalTiledMapRenderer = null
-	private var camera:OrthographicCamera = null
+	var controller:PlayerController = null
+	var currentPlayerFrame:TextureRegion = null
+	var currentPlayerSprite:Sprite = null
+	var mapRenderer:OrthogonalTiledMapRenderer = null
+	var camera:OrthographicCamera = null
 	var font:BitmapFont = null
 	var spriteBatch:SpriteBatch = null
 
@@ -67,7 +67,7 @@ class MainGameScreen extends Screen{
 		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
 		camera.update
 
-		MainGameScreen.player.update(delta)
+		controller.update(delta)
 		currentPlayerFrame = MainGameScreen.player.currentFrame
 
 		updatePortalLayerActivation(MainGameScreen.player.boundingBox)

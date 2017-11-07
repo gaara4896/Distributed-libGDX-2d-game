@@ -79,25 +79,17 @@ class PlayerController(val player:Player) extends InputProcessor{
 
 	def update(delta:Float){
 		if(KeyManager.LEFT){
-			player.calculateNextPosition(Direction.LEFT, delta)
-			player.state = State.WALKING
-			player.setDirection(Direction.LEFT)
+			player.update(delta, Direction.LEFT, State.WALKING)
 		} else if(KeyManager.RIGHT){
-			player.calculateNextPosition(Direction.RIGHT, delta)
-			player.state = State.WALKING
-			player.setDirection(Direction.RIGHT)
+			player.update(delta, Direction.RIGHT, State.WALKING)
 		} else if(KeyManager.UP){
-			player.calculateNextPosition(Direction.UP, delta)
-			player.state = State.WALKING
-			player.setDirection(Direction.UP)
+			player.update(delta, Direction.UP, State.WALKING)
 		} else if(KeyManager.DOWN){
-			player.calculateNextPosition(Direction.DOWN, delta)
-			player.state = State.WALKING
-			player.setDirection(Direction.DOWN)
+			player.update(delta, Direction.DOWN, State.WALKING)
 		} else if(KeyManager.QUIT){
 			Gdx.app.exit()
 		} else {
-			player.state = State.IDLE
+			player.update(delta, State.IDLE)
 		}
 	}
 

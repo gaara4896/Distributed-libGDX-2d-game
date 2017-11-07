@@ -14,6 +14,7 @@ import java.util.UUID
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
+import my.game.pkg.entity.utils.State._
 import my.game.pkg.assets.AssetsManager
 import my.game.pkg.map.MapManager
 
@@ -55,9 +56,40 @@ class Player{
 	var currentFrame = walkDownFrames.get(0)
 	val frameSprite = new Sprite(currentFrame.getTexture(), 0, 0, Player.FRAME_WIDTH, Player.FRAME_HEIGHT)
 
-	def update(delta:Float){
+	def update(delta:Float, direction:Direction, currentState:State){
 		frameTime = (frameTime + delta)%5
 		setBoundingSize(0f, 0.5f)
+		previousDirection = currentDirection
+		currentDirection = direction
+		state = currentState
+
+		velocity.scl(delta)
+		if(currentState != State.IDLE){
+			currentDirection match{
+				case Direction.LEFT => 
+					nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
+					nextPlayerPosition.y = currentPlayerPosition.y
+					currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
+				case Direction.RIGHT => 
+					nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
+					nextPlayerPosition.y = currentPlayerPosition.y
+					currentFrame = walkRightAnimation.getKeyFrame(frameTime)
+				case Direction.UP => 
+					nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
+					nextPlayerPosition.x = currentPlayerPosition.x
+					currentFrame = walkUpAnimation.getKeyFrame(frameTime)
+				case Direction.DOWN => 
+					nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
+					nextPlayerPosition.x = currentPlayerPosition.x
+					currentFrame = walkDownAnimation.getKeyFrame(frameTime)
+				case _ => 
+			}
+		}
+		velocity.scl(1 / delta)
+	}
+
+	def update(delta:Float, currentState:State){
+		update(delta, currentDirection, currentState)
 	}
 
 	def init(position:Vector2){
@@ -91,47 +123,14 @@ class Player{
 		frameSprite.setX(currentPlayerPosition.x)
 		frameSprite.setY(currentPlayerPosition.y)
 	}
-
-	def setDirection(direction:Direction){
-		previousDirection = currentDirection
-		currentDirection = direction
-
-		currentDirection match{
-			case Direction.DOWN => currentFrame = walkDownAnimation.getKeyFrame(frameTime)
-			case Direction.LEFT => currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
-			case Direction.RIGHT => currentFrame = walkRightAnimation.getKeyFrame(frameTime)
-			case Direction.UP => currentFrame = walkUpAnimation.getKeyFrame(frameTime)
-		}
-	}
-
-	def calculateNextPosition(currentDirection:Direction, delta:Float){
-		velocity.scl(delta)
-
-		currentDirection match{
-			case Direction.LEFT => 
-				nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
-				nextPlayerPosition.y = currentPlayerPosition.y
-			case Direction.RIGHT => 
-				nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
-				nextPlayerPosition.y = currentPlayerPosition.y
-			case Direction.UP => 
-				nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
-				nextPlayerPosition.x = currentPlayerPosition.x
-			case Direction.DOWN => 
-				nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
-				nextPlayerPosition.x = currentPlayerPosition.x
-			case _ => 
-		}
-		velocity.scl(1 / delta)
-	}
 }
 
 object Player{
 
 	def apply():Player = new Player()
 
-	val TAG:String = Player.getClass().getSimpleName()
-	val defaultSpritePatch:String = "sprites/characters/Warrior.png"
+	private val TAG:String = Player.getClass().getSimpleName()
+	private val defaultSpritePatch:String = "sprites/characters/Warrior.png"
 	val FRAME_WIDTH = 16
 	val FRAME_HEIGHT = 16
 }

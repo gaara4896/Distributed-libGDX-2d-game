@@ -10,6 +10,8 @@ object Main extends App {
     config.title = "distributed-libgdx-2d-game"
     config.height = Settings.height
     config.width = Settings.width
+    config.foregroundFPS = 30
+    config.backgroundFPS = -1
     val app:Application = new LwjglApplication(new Distributedlibgdx2dgame, config)
 
     Gdx.app = app
