@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.badlogic.gdx.maps.MapLayer
-import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Rectangle
@@ -34,7 +32,7 @@ class MainGameScreen extends Screen{
 	 * Execute when no screen is showed
 	 */
 	override def show{
-		setupViewport(15, 15)
+		MainGameScreen.VIEWPORT.setupViewport(15, 15, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
 
 		font = new BitmapFont
 		spriteBatch = new SpriteBatch
@@ -47,7 +45,7 @@ class MainGameScreen extends Screen{
 
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
-		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled.x.toInt, MainGameScreen.mapMgr.getPlayerStartUnitScaled.y.toInt)
+		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 		currentPlayerSprite = MainGameScreen.player.frameSprite
 
 		controller = PlayerController(MainGameScreen.player)
@@ -75,7 +73,7 @@ class MainGameScreen extends Screen{
 		updatePortalLayerActivation(MainGameScreen.player.boundingBox)
 
 		if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
-			MainGameScreen.player.setCurrentPosition(MainGameScreen.player.nextPlayerPosition.x, MainGameScreen.player.nextPlayerPosition.y)
+			MainGameScreen.player.move()
 		}
 		controller.update(delta)
 
@@ -92,7 +90,10 @@ class MainGameScreen extends Screen{
 	/**
 	 * Execute when the screen resize
 	 */
-	override def resize(width:Int, height:Int){}
+	override def resize(width:Int, height:Int){
+		MainGameScreen.VIEWPORT.setupViewport(15, 15, width, height)
+		camera.setToOrtho(false, MainGameScreen.VIEWPORT.viewportWidth, MainGameScreen.VIEWPORT.viewportHeight)
+	}
 
 	/**
 	 * Execute when the screen is paused
@@ -112,30 +113,6 @@ class MainGameScreen extends Screen{
 		controller.dispose()
 		Gdx.input.setInputProcessor(null)
 		mapRenderer.dispose()
-	}
-
-	def setupViewport(width:Int, height:Int){
-		MainGameScreen.VIEWPORT.virtualWidth = width
-		MainGameScreen.VIEWPORT.virtualHeight = height
-
-		MainGameScreen.VIEWPORT.viewportWidth = MainGameScreen.VIEWPORT.virtualWidth
-		MainGameScreen.VIEWPORT.viewportHeight = MainGameScreen.VIEWPORT.virtualHeight
-
-		MainGameScreen.VIEWPORT.physicalWidth = Gdx.graphics.getWidth()
-		MainGameScreen.VIEWPORT.physicalHeight = Gdx.graphics.getHeight()
-
-		MainGameScreen.VIEWPORT.aspectRatio = (MainGameScreen.VIEWPORT.virtualWidth / MainGameScreen.VIEWPORT.virtualHeight)
-
-		if(MainGameScreen.VIEWPORT.physicalWidth / MainGameScreen.VIEWPORT.physicalHeight >= MainGameScreen.VIEWPORT.aspectRatio){
-			MainGameScreen.VIEWPORT.viewportWidth = MainGameScreen.VIEWPORT.viewportHeight * (MainGameScreen.VIEWPORT.physicalWidth / MainGameScreen.VIEWPORT.physicalHeight)
-			MainGameScreen.VIEWPORT.viewportHeight = MainGameScreen.VIEWPORT.virtualHeight
-		} else {
-			MainGameScreen.VIEWPORT.viewportWidth = MainGameScreen.VIEWPORT.virtualWidth
-			MainGameScreen.VIEWPORT.viewportHeight = MainGameScreen.VIEWPORT.viewportWidth * (MainGameScreen.VIEWPORT.physicalHeight / MainGameScreen.VIEWPORT.physicalWidth)
-		}
-		Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: virtual: (${MainGameScreen.VIEWPORT.virtualWidth},${MainGameScreen.VIEWPORT.virtualHeight})" );
-		Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: viewport: (${MainGameScreen.VIEWPORT.viewportWidth},${MainGameScreen.VIEWPORT.viewportHeight})" );
-		Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: physical: (${MainGameScreen.VIEWPORT.physicalWidth},${MainGameScreen.VIEWPORT.physicalHeight})" );
 	}
 
 	def isCollisionWithMapLayer(boundingBox:Rectangle):Boolean = {
@@ -172,7 +149,7 @@ class MainGameScreen extends Screen{
 
 					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.currentPlayerPosition)
 					MainGameScreen.mapMgr.loadMap(mapName)
-					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled.x.toInt, MainGameScreen.mapMgr.getPlayerStartUnitScaled.y.toInt)
+					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
 					return true
@@ -204,5 +181,29 @@ object MainGameScreen {
 		var physicalWidth:Float = 0
 		var physicalHeight:Float = 0
 		var aspectRatio:Float = 0
+
+		def setupViewport(width:Int, height:Int, phyWidth:Int, phyHeight:Int){
+			virtualWidth = width
+			virtualHeight = height
+
+			viewportWidth = virtualWidth
+			viewportHeight = virtualHeight
+
+			physicalWidth = phyWidth
+			physicalHeight = phyHeight
+
+			aspectRatio = (virtualWidth / virtualHeight)
+
+			if(physicalWidth / physicalHeight >= aspectRatio){
+				viewportWidth = viewportHeight * (physicalWidth / physicalHeight)
+				viewportHeight = virtualHeight
+			} else {
+				viewportWidth = virtualWidth
+				viewportHeight = viewportWidth * (physicalHeight / physicalWidth)
+			}
+			Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: virtual: (${virtualWidth},${virtualHeight})" );
+			Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: viewport: (${viewportWidth},${viewportHeight})" );
+			Gdx.app.debug(MainGameScreen.TAG, s"WorldRenderer: physical: (${physicalWidth},${physicalHeight})" );
+		}
 	}
 }

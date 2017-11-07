@@ -60,11 +60,11 @@ class Player{
 		setBoundingSize(0f, 0.5f)
 	}
 
-	def init(x:Int, y:Int){
-		currentPlayerPosition.x = x
-		currentPlayerPosition.y = y
-		nextPlayerPosition.x = x
-		nextPlayerPosition.y = y
+	def init(position:Vector2){
+		currentPlayerPosition.x = position.x.toInt
+		currentPlayerPosition.y = position.y.toInt
+		nextPlayerPosition.x = position.x.toInt
+		nextPlayerPosition.y = position.y.toInt
 	}
 
 	def setBoundingSize(widthReduce:Float, heightReduce:Float){
@@ -85,11 +85,11 @@ class Player{
 		AssetsManager.unloadAsset(Player.defaultSpritePatch)
 	}
 
-	def setCurrentPosition(x:Float, y:Float){
-		frameSprite.setX(x)
-		frameSprite.setY(y)
-		currentPlayerPosition.x = x
-		currentPlayerPosition.y = y
+	def move(){
+		currentPlayerPosition.x = nextPlayerPosition.x
+		currentPlayerPosition.y = nextPlayerPosition.y
+		frameSprite.setX(currentPlayerPosition.x)
+		frameSprite.setY(currentPlayerPosition.y)
 	}
 
 	def setDirection(direction:Direction){
