@@ -59,6 +59,7 @@ class MainGameScreen extends Screen{
 
 	/**
 	 * Execute each frame to render the screen
+	 * @param delta:Float Time delta of the frame
 	 */
 	override def render(delta:Float){
 		Gdx.gl.glClearColor(0, 0, 0, 1)
@@ -89,6 +90,8 @@ class MainGameScreen extends Screen{
 
 	/**
 	 * Execute when the screen resize
+	 * @param width:Int  Width of the screen
+	 * @param height:Int Height of the screen
 	 */
 	override def resize(width:Int, height:Int){
 		MainGameScreen.VIEWPORT.setupViewport(15, 15, width, height)
@@ -113,8 +116,15 @@ class MainGameScreen extends Screen{
 		controller.dispose()
 		Gdx.input.setInputProcessor(null)
 		mapRenderer.dispose()
+		font.dispose()
+		spriteBatch.dispose()
 	}
 
+	/**
+	 * Check if the player has collision with the obstacle
+	 * @param  boundingBox:Rectangle Bounding box of the player
+	 * @return Boolean               True if it has collision with obstacle
+	 */
 	def isCollisionWithMapLayer(boundingBox:Rectangle):Boolean = {
 		val mapCollisionLayer = MainGameScreen.mapMgr.collisionLayer
 
@@ -132,6 +142,11 @@ class MainGameScreen extends Screen{
 		false
 	}
 
+	/**
+	 * Update portal layer check if activated
+	 * @param  boundingBox:Rectangle Bounding box of the player
+	 * @return Boolean               True if activated a portal
+	 */
 	def updatePortalLayerActivation(boundingBox:Rectangle):Boolean = {
 		val mapPortalLayer = MainGameScreen.mapMgr.portalLayer
 
@@ -165,6 +180,7 @@ object MainGameScreen {
 
 	/**
 	 * Apply method for creating MainGameScreen
+	 * @return MainGameScreen New instance of MainGameScreen
 	 */
 	def apply():MainGameScreen = new MainGameScreen
 
@@ -182,6 +198,13 @@ object MainGameScreen {
 		var physicalHeight:Float = 0
 		var aspectRatio:Float = 0
 
+		/**
+		 * Setup Viewport of the game
+		 * @param  width:Int     Expected width of viewport
+		 * @param  height:Int    Expected height of viewport
+		 * @param  phyWidth:Int  Physical width of the window
+		 * @param  phyHeight:Int Physical height of the window
+		 */
 		def setupViewport(width:Int, height:Int, phyWidth:Int, phyHeight:Int){
 			virtualWidth = width
 			virtualHeight = height

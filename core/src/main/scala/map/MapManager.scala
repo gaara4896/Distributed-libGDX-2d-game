@@ -37,7 +37,7 @@ class MapManager{
 
     /** 
      * laoadMap execute when used to load a specific map
-     * @param mapName:String name of the map
+     * @param mapName:String Name of the map
      */
     def loadMap(mapName:String){
     	playerStart.set(0, 0)
@@ -83,6 +83,10 @@ class MapManager{
     	Gdx.app.debug(MapManager.TAG, s"Player start: (${playerStart.x}, ${playerStart.y})")
     }
 
+    /**
+     * Get current map Tiled for rendering
+     * @return TiledMap Tiled of the Map
+     */
     def getCurrentMap():TiledMap = {
     	if(currentMap == null){
     		currentMapName = MapManager.TOWN
@@ -91,12 +95,20 @@ class MapManager{
     	currentMap
     }
 
+    /**
+     * Get player start position of the map
+     * @return Vector2 Position of the player to start
+     */
     def getPlayerStartUnitScaled:Vector2 = {
     	val _playerStart = playerStart.cpy()
     	_playerStart.set(playerStart.x * MapManager.UNIT_SCALE, playerStart.y * MapManager.UNIT_SCALE)
     	_playerStart
     }
 
+    /**
+     * Set player start position to the closest spawm point to previous map
+     * @param position:Vector2 Position of the player closest start position
+     */
     def setClosestStartPosition(position:Vector2){
     	Gdx.app.debug(MapManager.TAG, s"setClosestStartPosition INPUT: (${position.x}, ${position.y})$currentMapName")
 
@@ -121,6 +133,10 @@ class MapManager{
     	playerStartLocationTable.put(currentMapName, closestPlayerStartPosition.cpy())
     }
 
+    /**
+     * Set player start position to the closest spawm point in Scaled Unit
+     * @param position:Vector2 Position of the player to the closest start position
+     */
     def setClosestStartPositionFromScaledUnits(position:Vector2){
     	if(MapManager.UNIT_SCALE <= 0) return
 
@@ -133,6 +149,7 @@ object MapManager{
 
 	/**
 	 * Apply method for creating MapManager
+     * @return MapManager New instance of MapManager
 	 */
 	def apply():MapManager = new MapManager
 

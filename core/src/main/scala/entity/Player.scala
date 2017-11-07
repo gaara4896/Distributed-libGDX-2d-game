@@ -56,6 +56,12 @@ class Player{
 	var currentFrame = walkDownFrames.get(0)
 	val frameSprite = new Sprite(currentFrame.getTexture(), 0, 0, Player.FRAME_WIDTH, Player.FRAME_HEIGHT)
 
+	/**
+	 * Update the player to latest status
+	 * @param  delta:Float         Delta time value of the frame
+	 * @param  direction:Direction Direction of the player
+	 * @param  currentState:State  State of the player
+	 */
 	def update(delta:Float, direction:Direction, currentState:State){
 		frameTime = (frameTime + delta)%5
 		setBoundingSize(0f, 0.5f)
@@ -88,10 +94,19 @@ class Player{
 		velocity.scl(1 / delta)
 	}
 
+	/**
+	 * Overloading method for updating the player status
+	 * @param  delta:Float        Delta time value of the frame
+	 * @param  currentState:State State of the player
+	 */
 	def update(delta:Float, currentState:State){
 		update(delta, currentDirection, currentState)
 	}
 
+	/**
+	 * Initialize position of the player
+	 * @param  position:Vector2 Position of the player
+	 */
 	def init(position:Vector2){
 		currentPlayerPosition.x = position.x.toInt
 		currentPlayerPosition.y = position.y.toInt
@@ -99,6 +114,11 @@ class Player{
 		nextPlayerPosition.y = position.y.toInt
 	}
 
+	/**
+	 * Set bounding box size for the player
+	 * @param widthReduce:Float  Width reduced in percentage
+	 * @param heightReduce:Float Height reduced in percentage
+	 */
 	def setBoundingSize(widthReduce:Float, heightReduce:Float){
 		val width = Player.FRAME_WIDTH * (1.0f - widthReduce)
 		val height = Player.FRAME_HEIGHT * (1.0f - heightReduce)
@@ -113,10 +133,16 @@ class Player{
 		boundingBox.set(minX, minY, width, height)
 	}
 
+	/**
+	 * Dispose of asset when not needed
+	 */
 	def dispose(){
 		AssetsManager.unloadAsset(Player.defaultSpritePatch)
 	}
 
+	/**
+	 * Move player
+	 */
 	def move(){
 		currentPlayerPosition.x = nextPlayerPosition.x
 		currentPlayerPosition.y = nextPlayerPosition.y
@@ -127,6 +153,10 @@ class Player{
 
 object Player{
 
+	/**
+	 * Apply method for creating Player
+	 * @return Player New instance of Player
+	 */
 	def apply():Player = new Player()
 
 	private val TAG:String = Player.getClass().getSimpleName()
