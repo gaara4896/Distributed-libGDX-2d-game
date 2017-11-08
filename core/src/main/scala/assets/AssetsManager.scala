@@ -5,13 +5,19 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 
 object AssetsManager{
 	private val TAG = AssetsManager.getClass.getSimpleName()
 	private val assetManager = new AssetManager()
 	private val filePathResolver = new InternalFileHandleResolver()
+
+	val STATUSUI_TEXTUREATLAS = new TextureAtlas("skins/statusui.atlas")
+	val ITEMS_TEXTUREATLAS = new TextureAtlas("skins/items.atlas")
+	val STATUSUI_SKIN = new Skin(Gdx.files.internal("skins/statusui.json"), STATUSUI_TEXTUREATLAS)
 
 	/**
 	 * Unload asset that are loaded
