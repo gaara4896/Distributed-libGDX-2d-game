@@ -12,21 +12,22 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
 import my.game.pkg.entity.Player
 
 import scala.collection.JavaConverters._
 
-class MainGameScreen extends Screen{
+class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
-	var controller:PlayerController = null
+	val controller = PlayerController(MainGameScreen.player)
 	var currentPlayerFrame:TextureRegion = null
-	var currentPlayerSprite:Sprite = null
-	var mapRenderer:OrthogonalTiledMapRenderer = null
-	var camera:OrthographicCamera = null
-	var font:BitmapFont = null
-	var spriteBatch:SpriteBatch = null
+	var currentPlayerSprite = MainGameScreen.player.frameSprite
+	val mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
+	val camera = new OrthographicCamera()
+	val font = new BitmapFont()
+	val spriteBatch = new SpriteBatch()
 
 	/**
 	 * Execute when no screen is showed
@@ -34,21 +35,12 @@ class MainGameScreen extends Screen{
 	override def show{
 		MainGameScreen.VIEWPORT.setupViewport(15, 15, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
 
-		font = new BitmapFont
-		spriteBatch = new SpriteBatch
-
-		camera = new OrthographicCamera()
 		camera.setToOrtho(false, MainGameScreen.VIEWPORT.viewportWidth, MainGameScreen.VIEWPORT.viewportHeight)
-
-		mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
 		mapRenderer.setView(camera)
 
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
-		currentPlayerSprite = MainGameScreen.player.frameSprite
-
-		controller = PlayerController(MainGameScreen.player)
 		Gdx.input.setInputProcessor(controller)
 	}
 
@@ -180,9 +172,10 @@ object MainGameScreen {
 
 	/**
 	 * Apply method for creating MainGameScreen
+	 * @param game:Distributedlibgdx2dgame Main game class
 	 * @return MainGameScreen New instance of MainGameScreen
 	 */
-	def apply():MainGameScreen = new MainGameScreen
+	def apply(game:Distributedlibgdx2dgame):MainGameScreen = new MainGameScreen(game)
 
 	private val TAG:String = MainGameScreen.getClass.getSimpleName
 

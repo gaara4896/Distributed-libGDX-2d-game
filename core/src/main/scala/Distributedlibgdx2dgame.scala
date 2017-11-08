@@ -5,21 +5,20 @@ import com.badlogic.gdx.Game
 
 class Distributedlibgdx2dgame extends Game {
 
+	var mainGameScreen:MainGameScreen = null
+
 	/**
 	 * Execute when this class is first instantiate
 	 */
 	override def create() {
-		setScreen(Distributedlibgdx2dgame.mainGameScreen)
+		mainGameScreen = MainGameScreen(this)
+		setScreen(mainGameScreen)
 	}
 
 	/**
 	 * Execute when this class is close
 	 */
 	override def dispose() {
-		Distributedlibgdx2dgame.mainGameScreen.dispose
+		mainGameScreen.dispose
 	}
-}
-
-object Distributedlibgdx2dgame {
-	val mainGameScreen = MainGameScreen()
 }
