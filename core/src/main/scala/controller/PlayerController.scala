@@ -1,16 +1,10 @@
 package my.game.pkg.controller
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
-import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.{Gdx, Input, InputProcessor}
 import com.badlogic.gdx.math.Vector3
 
-import java.util.HashMap
-import java.util.Map
-
 import my.game.pkg.entity.Player
-import my.game.pkg.entity.utils.Direction
-import my.game.pkg.entity.utils.State
+import my.game.pkg.entity.utils.{Direction, State}
 
 class PlayerController(val player:Player) extends InputProcessor{
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game
 
 class Distributedlibgdx2dgame extends Game {
 
+	var connectServerScreen:ConnectServerScreen = null
 	var mainMenuScreen:MainMenuScreen = null
 	var mainGameScreen:MainGameScreen = null
 
@@ -12,6 +13,7 @@ class Distributedlibgdx2dgame extends Game {
 	 * Execute when this class is first instantiate
 	 */
 	override def create() {
+		connectServerScreen = ConnectServerScreen(this)
 		mainGameScreen = MainGameScreen(this)
 		mainMenuScreen = MainMenuScreen(this)
 		setScreen(mainMenuScreen)

@@ -3,11 +3,8 @@ package my.game.pkg.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.Screen
-import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.{InputEvent, Stage}
+import com.badlogic.gdx.scenes.scene2d.ui.{Image, Table, TextButton}
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
 import my.game.pkg.Distributedlibgdx2dgame
@@ -38,49 +35,51 @@ class MainMenuScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
 		newGameButton.addListener(new ClickListener() {
 								
-									  override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
-										  true
-									  }
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
 
-									  override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
-										  game.setScreen(game.mainGameScreen)
-									  }
-								  }
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					game.setScreen(game.mainGameScreen)
+				}
+			}
 		)
 
 		loadGameButton.addListener(new ClickListener() {
 
-									   override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
-										   true
-									   }
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
 
-									   override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
-										   game.setScreen(game.mainGameScreen)
-									   }
-								   }
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					game.setScreen(game.mainGameScreen)
+				}
+			}
 		)
 
 		instructionButton.addListener(new ClickListener() {
 
-										  override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
-										  	  true
-										  }
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
 
-										  override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
-										  }
-		})
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					game.setScreen(game.connectServerScreen)
+				}
+			}
+		)
 
 		exitButton.addListener(new ClickListener() {
 
-								   override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
-									   true
-								   }
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
 
-								   override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
-									   Gdx.app.exit()
-								   }
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					Gdx.app.exit()
+				}
 
-							   }
+			}
 		)
 
 		stage.addActor(table)

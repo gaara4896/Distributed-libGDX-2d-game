@@ -2,7 +2,6 @@ package my.game.pkg.map
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.MapLayer
-import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math._
@@ -119,7 +118,7 @@ class MapManager{
     	for(x <- spawnsLayer.getObjects().iterator().asScala){
     		if(x.getName().equalsIgnoreCase(MapManager.PLAYER_START)){
     			x.asInstanceOf[RectangleMapObject].getRectangle().getPosition(playerStartPositionRect)
-    			var distance = position.dst2(playerStartPositionRect)
+    			val distance = position.dst2(playerStartPositionRect)
 
     			Gdx.app.debug(MapManager.TAG, s"distance: $distance for $currentMapName")
 
