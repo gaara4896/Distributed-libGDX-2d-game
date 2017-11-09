@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.{Label, Table, TextButton, TextField}
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 
 import my.game.pkg.Distributedlibgdx2dgame
+import my.game.pkg.client.Client
 import my.game.pkg.assets.AssetsManager
 
 class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
@@ -22,11 +23,11 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		table.setFillParent(true)
 
 		val ipLabel = new Label("IP Address:", AssetsManager.STATUSUI_SKIN)
-		val ipTextField = new TextField("", AssetsManager.STATUSUI_SKIN)
+		val ipTextField = new TextField("127.0.0.1", AssetsManager.STATUSUI_SKIN)
 		val portLabel = new Label("Port:", AssetsManager.STATUSUI_SKIN)
-		val portTextField = new TextField("", AssetsManager.STATUSUI_SKIN)
+		val portTextField = new TextField("8080", AssetsManager.STATUSUI_SKIN)
 		val connectButton = new TextButton("Connect", AssetsManager.STATUSUI_SKIN)
-		val labelStatus = new Label("Not Connected", AssetsManager.STATUSUI_SKIN)
+		val statusLabel = new Label("Not Connected", AssetsManager.STATUSUI_SKIN)
 		val playButton = new TextButton("Play Offline", AssetsManager.STATUSUI_SKIN)
 
 		table.add(ipLabel).spaceBottom(10)
@@ -34,8 +35,46 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		table.add(portLabel).spaceBottom(10).spaceBottom(25)
 		table.add(portTextField).width(250).spaceBottom(25)
 		table.add(connectButton).spaceBottom(25).spaceLeft(20).row()
-		table.add(labelStatus)
+		table.add(statusLabel)
 		table.add(playButton).colspan(2).row()
+
+		connectButton.addListener(new ClickListener() {
+								
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
+
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					if(ipTextField.getText().equals("") || portTextField.getText().equals("")){
+						return
+					}
+
+					val ipAddress = ipTextField.getText()
+					val port = portTextField.getText()
+
+					game.client match{
+						case Some(x) =>
+							x.connect()
+					}
+
+					statusLabel.setText("Connected")
+					playButton.setText("Play Online")
+				}
+			}
+		)
+
+		playButton.addListener(new ClickListener() {
+
+				override def touchDown(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int):Boolean = {
+					true
+				}
+
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
+					game.setScreen(game.mainGameScreen)
+				}
+
+			}
+		)
 
 		stage.addActor(table)
 		Gdx.input.setInputProcessor(stage)

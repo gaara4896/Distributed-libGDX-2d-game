@@ -15,7 +15,10 @@ object Settings {
     libgdxVersion := (libgdxVersion in LocalProject("all-platforms")).value,
     scalaVersion := (scalaVersion in LocalProject("all-platforms")).value,
     libraryDependencies ++= Seq(
-      "com.badlogicgames.gdx" % "gdx" % libgdxVersion.value
+      "com.badlogicgames.gdx" % "gdx" % libgdxVersion.value,
+      "com.typesafe.akka" %% "akka-actor" % "2.5.6",
+      "com.typesafe.akka" %% "akka-testkit" % "2.5.6",
+      "com.typesafe.akka" %% "akka-remote" % "2.5.6"
     ),
     javacOptions ++= Seq(
       "-Xlint",
