@@ -9,7 +9,7 @@ class Distributedlibgdx2dgame extends Game {
 	var connectServerScreen:ConnectServerScreen = null
 	var mainMenuScreen:MainMenuScreen = null
 	var mainGameScreen:MainGameScreen = null
-	var client:Option[Client] = Option(new Client("192.168.1.5", "8080"))
+	var client:Option[Client] = None
 
 	/**
 	 * Execute when this class is first instantiate

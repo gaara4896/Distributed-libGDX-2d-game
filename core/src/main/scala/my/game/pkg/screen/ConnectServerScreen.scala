@@ -16,19 +16,19 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	val stage = new Stage()
 	val table = new Table()
 
+	val ipLabel = new Label("IP Address:", AssetsManager.STATUSUI_SKIN)
+	val ipTextField = new TextField("127.0.0.1", AssetsManager.STATUSUI_SKIN)
+	val portLabel = new Label("Port:", AssetsManager.STATUSUI_SKIN)
+	val portTextField = new TextField("8080", AssetsManager.STATUSUI_SKIN)
+	val connectButton = new TextButton("Connect", AssetsManager.STATUSUI_SKIN)
+	val statusLabel = new Label("Not Connected", AssetsManager.STATUSUI_SKIN)
+	val playButton = new TextButton("Play Offline", AssetsManager.STATUSUI_SKIN)
+
 	/**
 	 * Execute when no screen is showed
 	 */
 	override def show{
 		table.setFillParent(true)
-
-		val ipLabel = new Label("IP Address:", AssetsManager.STATUSUI_SKIN)
-		val ipTextField = new TextField("127.0.0.1", AssetsManager.STATUSUI_SKIN)
-		val portLabel = new Label("Port:", AssetsManager.STATUSUI_SKIN)
-		val portTextField = new TextField("8080", AssetsManager.STATUSUI_SKIN)
-		val connectButton = new TextButton("Connect", AssetsManager.STATUSUI_SKIN)
-		val statusLabel = new Label("Not Connected", AssetsManager.STATUSUI_SKIN)
-		val playButton = new TextButton("Play Offline", AssetsManager.STATUSUI_SKIN)
 
 		table.add(ipLabel).spaceBottom(10)
 		table.add(ipTextField).width(250).spaceBottom(10).row()
@@ -52,13 +52,7 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					val ipAddress = ipTextField.getText()
 					val port = portTextField.getText()
 
-					game.client match{
-						case Some(x) =>
-							x.connect()
-					}
-
-					statusLabel.setText("Connected")
-					playButton.setText("Play Online")
+					game.client = Option(new Client(ipAddress, port, game))
 				}
 			}
 		)
@@ -121,6 +115,13 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	 */
 	override def dispose{
 		stage.dispose()
+	}
+
+	def updateConnection(connected:Boolean){
+		if(connected){
+			statusLabel.setText("Connected")
+			playButton.setText("Play Online")
+		}
 	}
 
 }
