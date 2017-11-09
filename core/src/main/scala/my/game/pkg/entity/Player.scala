@@ -145,7 +145,6 @@ class Player{
 		currentPlayerPosition.y = nextPlayerPosition.y
 		frameSprite.setX(currentPlayerPosition.x)
 		frameSprite.setY(currentPlayerPosition.y)
-		Gdx.app.debug(Player.TAG, s"${currentPlayerPosition.x}, ${currentPlayerPosition.y}")
 	}
 }
 

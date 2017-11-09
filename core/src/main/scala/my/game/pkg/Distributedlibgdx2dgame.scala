@@ -10,6 +10,7 @@ class Distributedlibgdx2dgame extends Game {
 	var mainMenuScreen:MainMenuScreen = null
 	var mainGameScreen:MainGameScreen = null
 	var client:Option[Client] = None
+	var gameUUID:Option[String] = None
 
 	/**
 	 * Execute when this class is first instantiate
@@ -18,7 +19,7 @@ class Distributedlibgdx2dgame extends Game {
 		connectServerScreen = ConnectServerScreen(this)
 		mainGameScreen = MainGameScreen(this)
 		mainMenuScreen = MainMenuScreen(this)
-		setScreen(mainMenuScreen)
+		setScreen(connectServerScreen)
 	}
 
 	/**

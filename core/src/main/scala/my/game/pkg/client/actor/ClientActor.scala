@@ -13,8 +13,15 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 
 	def receive = {
 		case Connect => remote ! Connect
-		case Connected => game.connectServerScreen.updateConnection(true)
+		case Connected(uuid) => 
+			game.connectServerScreen.updateConnection(true)
+			game.gameUUID = Option(uuid)
+			context.become(connected)
 		case _ => println("Unknown") 
+	}
+
+	def connected:Receive = {
+		case UpdatePlayerStatus(uuid, x, y, direction, frameTime) => 
 	}
 }
 
