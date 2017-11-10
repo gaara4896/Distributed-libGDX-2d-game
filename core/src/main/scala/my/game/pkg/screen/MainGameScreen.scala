@@ -12,10 +12,11 @@ import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
-import my.game.pkg.entity.Player
+import my.game.pkg.entity.{Player, RemotePlayer}
 import my.game.pkg.entity.utils.State
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
@@ -73,6 +74,9 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		mapRenderer.render()
 		mapRenderer.getBatch().begin()
 		mapRenderer.getBatch().draw(currentPlayerFrame, currentPlayerSprite.getX, currentPlayerSprite.getY, 1, 1)
+		for(remotePlayer <- MainGameScreen.remotePlayers){
+			mapRenderer.getBatch().draw(remotePlayer.currentFrame, remotePlayer.frameSprite.getX, remotePlayer.frameSprite.getY, 1, 1)
+		}
 		mapRenderer.getBatch().end()
 		spriteBatch.begin
 		font.draw(spriteBatch, s"FPS:${Gdx.graphics.getFramesPerSecond}", 0, 480)
@@ -180,6 +184,7 @@ object MainGameScreen {
 
 	var mapMgr:MapManager = MapManager()
 	val player = Player()
+	val remotePlayers = new ListBuffer[RemotePlayer]()
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0
