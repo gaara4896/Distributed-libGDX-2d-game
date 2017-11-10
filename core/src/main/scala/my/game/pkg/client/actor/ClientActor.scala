@@ -15,6 +15,10 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 
 	val remoteConnection = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/serverconenction")
 	val remoteGameServer = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/gameserver")
+
+	/**
+	 * Execute when message received
+	 */
 	def receive = {
 		case Connect => remoteConnection ! Connect
 		case Connected(uuid) => 
@@ -24,11 +28,14 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case _ => println("Unknown") 
 	}
 
+	/**
+	 * Execute when message received during connected state
+	 * @return Receive Message received
+	 */
 	def connected:Receive = {
 		case Quit => remoteConnection ! Quit
 		case Update(uuid, map, x, y, direction, frameTime) => remoteGameServer ! Update(uuid, map, x, y, direction, frameTime)
 		case UpdatePlayerStatus(uuid, x, y, direction, frameTime) => 
-			println("Received")
 			var exist:Boolean = false
 			breakable{ 
 				for( remotePlayer <- MainGameScreen.remotePlayers){
@@ -47,5 +54,12 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 
 object ClientActor{
 
+	/**
+	 * Apply method for creating ClientActor
+	 * @param  ipAddress:String             Ip address of the server
+	 * @param  port:String                  Port number of the server
+	 * @param  game:Distributedlibgdx2dgame Main game class
+	 * @return ClientActor                  New instance of ClientActor
+	 */
 	def apply(ipAddress:String, port:String, game:Distributedlibgdx2dgame):ClientActor = new ClientActor(ipAddress, port, game)
 }

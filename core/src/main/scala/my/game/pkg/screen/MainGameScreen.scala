@@ -175,8 +175,8 @@ object MainGameScreen {
 
 	/**
 	 * Apply method for creating MainGameScreen
-	 * @param game:Distributedlibgdx2dgame Main game class
-	 * @return MainGameScreen New instance of MainGameScreen
+	 * @param  game:Distributedlibgdx2dgame Main game class
+	 * @return MainGameScreen               New instance of MainGameScreen
 	 */
 	def apply(game:Distributedlibgdx2dgame):MainGameScreen = new MainGameScreen(game)
 

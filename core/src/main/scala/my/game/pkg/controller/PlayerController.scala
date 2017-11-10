@@ -62,11 +62,11 @@ class PlayerController(val player:Player) extends InputProcessor{
 
 	/**
 	 * Triggered when mouse button is clicked
-	 * @param x:Int       X position of the mouse
-	 * @param y:Int       Y position of the mouse
-	 * @param pointer:Int Type of pointer
-	 * @param button:Int  Button clicked on the mouse
-	 * @return Boolean    True when is processed
+	 * @param  x:Int       X position of the mouse
+	 * @param  y:Int       Y position of the mouse
+	 * @param  pointer:Int Type of pointer
+	 * @param  button:Int  Button clicked on the mouse
+	 * @return Boolean     True when is processed
 	 */
 	override def touchDown(x:Int, y:Int, pointer:Int, button:Int):Boolean = {
 		if( button == Input.Buttons.LEFT || button == Input.Buttons.RIGHT ){
@@ -82,11 +82,11 @@ class PlayerController(val player:Player) extends InputProcessor{
 
 	/**
 	 * Triggered when mouse button is lifted
-	 * @param x:Int       X position of the mouse
-	 * @param y:Int       Y position of the mouse
-	 * @param pointer:Int Type of pointer
-	 * @param button:Int  Button lifted on the mouse
-	 * @return Boolean    True when is processed
+	 * @param  x:Int       X position of the mouse
+	 * @param  y:Int       Y position of the mouse
+	 * @param  pointer:Int Type of pointer
+	 * @param  button:Int  Button lifted on the mouse
+	 * @return Boolean     True when is processed
 	 */
 	override def touchUp(x:Int, y:Int, pointer:Int, button:Int):Boolean = {
 		if(button == Input.Buttons.LEFT){
@@ -99,31 +99,32 @@ class PlayerController(val player:Player) extends InputProcessor{
 
 	/**
 	 * Triggered when mouse is dragged
-	 * @param x:Int       X position of the mouse
-	 * @param y:Int       Y position of the mouse
-	 * @param pointer:Int Type of pointer
-	 * @return Boolean    True when is processed
+	 * @param  x:Int       X position of the mouse
+	 * @param  y:Int       Y position of the mouse
+	 * @param  pointer:Int Type of pointer
+	 * @return Boolean     True when is processed
 	 */
 	override def touchDragged(x:Int, y:Int, pointer:Int):Boolean = false
 
 	/**
 	 * Triggered when mouse move
-	 * @param x:Int    X position of the mouse
-	 * @param y:Int    Y position of the mouse
-	 * @return Boolean True when is processed
+	 * @param  x:Int    X position of the mouse
+	 * @param  y:Int    Y position of the mouse
+	 * @return Boolean  True when is processed
 	 */
 	override def mouseMoved(x:Int, y:Int):Boolean = false
 
 	/**
 	 * Triggered when mouse is scrolled
-	 * @param amount:Int Amount that is scrolled
-	 * @return Boolean   True when is processed
+	 * @param  amount:Int Amount that is scrolled
+	 * @return Boolean    True when is processed
 	 */
 	override def scrolled(amount:Int):Boolean = false
 
 	/**
 	 * Update status of player controller
-	 * @param  delta:Float Delta value of the time frame
+	 * @param delta:Float                  Delta value of the time frame
+	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
 	def update(delta:Float, game:Distributedlibgdx2dgame){
 		if(KeyManager.LEFT){

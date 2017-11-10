@@ -109,6 +109,8 @@ class Player extends PlayerEntity {
 
 	/**
 	 * Move player
+	 * @param game:Distributedlibgdx2dgame Main game class
+	 * @param mapName:String               Current map name
 	 */
 	def move(game:Distributedlibgdx2dgame, mapName:String){
 		currentPlayerPosition.x = nextPlayerPosition.x
