@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.{GL20, OrthographicCamera}
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
-
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
-import my.game.pkg.entity.Player
+import my.game.pkg.entity.utils.NPCStorage
+import my.game.pkg.entity.{MovingNPC, NPC, Player, PlayerEntity}
 
 import scala.collection.JavaConverters._
 
@@ -38,6 +38,10 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
+
+		//init NPCs
+		MainGameScreen.NPCs.initNPCs()
+
 		Gdx.input.setInputProcessor(controller)
 	}
 
@@ -58,6 +62,10 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		camera.update
 
 		controller.update(delta)
+
+		//update moving NPCs
+		MainGameScreen.NPCs.updateMovingNPCs(delta)
+
 		currentPlayerFrame = MainGameScreen.player.currentFrame
 
 		updatePortalLayerActivation(MainGameScreen.player.boundingBox)
@@ -65,12 +73,23 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
 			MainGameScreen.player.move()
 		}
+
+		//move NPCs
+		MainGameScreen.NPCs.moveNPCs()
+
 		controller.update(delta)
+
+		//update moving NPCs
+		MainGameScreen.NPCs.updateMovingNPCs(delta)
 
 		mapRenderer.setView(camera)
 		mapRenderer.render()
 		mapRenderer.getBatch().begin()
 		mapRenderer.getBatch().draw(currentPlayerFrame, currentPlayerSprite.getX, currentPlayerSprite.getY, 1, 1)
+
+		//draw NPCs
+		MainGameScreen.NPCs.drawNPCs(mapRenderer.getBatch)
+
 		mapRenderer.getBatch().end()
 		spriteBatch.begin
 		font.draw(spriteBatch, s"FPS:${Gdx.graphics.getFramesPerSecond}", 0, 480)
@@ -177,7 +196,10 @@ object MainGameScreen {
 	private val TAG:String = MainGameScreen.getClass.getSimpleName
 
 	var mapMgr:MapManager = MapManager()
-	val player = Player()
+	val player = Player("Tony", PlayerEntity.spritePatchWarrior)
+
+	//npc testing
+	val NPCs = NPCStorage()
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0

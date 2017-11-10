@@ -15,8 +15,17 @@ import my.game.pkg.entity.utils.State._
 import my.game.pkg.assets.AssetsManager
 import my.game.pkg.map.MapManager
 
-class Player(val playername : String) extends PlayerEntity {
+class Player(val playername : String, spritePatch : String) extends PlayerEntity (spritePatch) {
 
+	//for testing purpose, remove after
+	override def move(){
+		currentPlayerPosition.x = nextPlayerPosition.x
+		currentPlayerPosition.y = nextPlayerPosition.y
+		frameSprite.setX(currentPlayerPosition.x)
+		frameSprite.setY(currentPlayerPosition.y)
+
+		println(s"Position X : ${currentPlayerPosition.x}, Position Y : ${currentPlayerPosition.y}")
+	}
 }
 
 object Player{
@@ -25,8 +34,7 @@ object Player{
 		* Apply method for creating Player
 		* @return Player New instance of Player
 		*/
-	def apply(playername : String):Player = new Player(playername)
+	def apply(playername : String, spritePatch : String):Player = new Player(playername, spritePatch)
 
 	private val TAG:String = Player.getClass().getSimpleName()
-	private val defaultSpritePatch:String = "sprites/characters/Warrior.png"
 }
