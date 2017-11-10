@@ -9,10 +9,10 @@ import my.game.server.dictionary.ServerDictionary._
 
 class ClientActor(val ipAddress:String, val port:String, val game:Distributedlibgdx2dgame) extends Actor{	
 
-	val remote = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/serverconenction")
-
+	val remoteConnection = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/serverconenction")
+	val remoteGameServer = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/gameserver")
 	def receive = {
-		case Connect => remote ! Connect
+		case Connect => remoteConnection ! Connect
 		case Connected(uuid) => 
 			game.connectServerScreen.updateConnection(true)
 			game.gameUUID = Option(uuid)
@@ -21,6 +21,8 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 	}
 
 	def connected:Receive = {
+		case Quit => remoteConnection ! Quit
+		case Update(uuid, map, x, y, direction, frameTime) => remoteGameServer ! Update(uuid, map, x, y, direction, frameTime)
 		case UpdatePlayerStatus(uuid, x, y, direction, frameTime) => 
 	}
 }

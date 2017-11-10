@@ -13,6 +13,7 @@ import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
 import my.game.pkg.entity.Player
+import my.game.pkg.entity.utils.State
 
 import scala.collection.JavaConverters._
 
@@ -38,6 +39,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
+		MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
 		Gdx.input.setInputProcessor(controller)
 	}
 
@@ -54,18 +56,18 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
-		camera.update
-
-		controller.update(delta)
+		controller.update(delta, game)
 		currentPlayerFrame = MainGameScreen.player.currentFrame
 
-		updatePortalLayerActivation(MainGameScreen.player.boundingBox)
+		if(MainGameScreen.player.state == State.WALKING){
+			updatePortalLayerActivation(MainGameScreen.player.boundingBox)
 
-		if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
-			MainGameScreen.player.move()
+			if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
+				MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
+			}
 		}
-		controller.update(delta)
+		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
+		camera.update
 
 		mapRenderer.setView(camera)
 		mapRenderer.render()

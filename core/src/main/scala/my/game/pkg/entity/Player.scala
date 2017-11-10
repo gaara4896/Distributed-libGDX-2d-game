@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
@@ -12,7 +13,7 @@ import my.game.pkg.assets.AssetsManager
 import my.game.pkg.map.MapManager
 
 class Player extends PlayerEntity {
-	val velocity = new Vector2(8f, 8f)
+	val velocity = new Vector2(10f, 10f)
 	var currentDirection = Direction.LEFT
 	var previousDirection = Direction.UP
 	var frameTime:Float = 0f
@@ -30,7 +31,6 @@ class Player extends PlayerEntity {
 	 */
 	def update(delta:Float, direction:Direction, currentState:State){
 		frameTime = (frameTime + delta)%5
-		setBoundingSize(0f, 0.5f)
 		previousDirection = currentDirection
 		currentDirection = direction
 		state = currentState
@@ -58,6 +58,7 @@ class Player extends PlayerEntity {
 			}
 		}
 		velocity.scl(1 / delta)
+		setBoundingSize(0f, 0.5f)
 	}
 
 	/**
@@ -109,11 +110,17 @@ class Player extends PlayerEntity {
 	/**
 	 * Move player
 	 */
-	def move(){
+	def move(game:Distributedlibgdx2dgame, mapName:String){
 		currentPlayerPosition.x = nextPlayerPosition.x
 		currentPlayerPosition.y = nextPlayerPosition.y
 		frameSprite.setX(currentPlayerPosition.x)
 		frameSprite.setY(currentPlayerPosition.y)
+		game.client match{
+			case Some(x) => game.gameUUID.foreach{uuid =>
+					x.sendStatus(uuid, mapName, currentPlayerPosition.x, currentPlayerPosition.y, currentDirection, frameTime)
+				}
+			case None => 
+		}
 	}
 }
 
