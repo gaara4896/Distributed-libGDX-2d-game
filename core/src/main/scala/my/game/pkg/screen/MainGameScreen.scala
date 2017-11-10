@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
-import my.game.pkg.entity.utils.NPCStorage
+import my.game.pkg.entity.utils.{MapNPCs, TownNPCs}
 import my.game.pkg.entity.{MovingNPC, NPC, Player, PlayerEntity}
 
 import scala.collection.JavaConverters._
@@ -40,7 +40,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 
 		//init NPCs
-		MainGameScreen.NPCs.initNPCs()
+		//MainGameScreen.NPCs.initNPCs()
 
 		Gdx.input.setInputProcessor(controller)
 	}
@@ -170,9 +170,16 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 						return false
 					}
 
+					//dispose current map's NPCs and generate another map's NPCs
+					MainGameScreen.NPCs.disposeNPCs()
+
 					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.currentPlayerPosition)
 					MainGameScreen.mapMgr.loadMap(mapName)
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
+
+					//set new MapNPCs value to NPCs and init
+					MainGameScreen.NPCs = MapNPCs(mapName)
+
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
 					return true
@@ -198,8 +205,8 @@ object MainGameScreen {
 	var mapMgr:MapManager = MapManager()
 	val player = Player("Tony", PlayerEntity.spritePatchWarrior)
 
-	//npc testing
-	val NPCs = NPCStorage()
+	//set first NPCs to TOWN NPCs
+	var NPCs = MapNPCs(MapManager.TOWN)
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0

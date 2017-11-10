@@ -5,8 +5,14 @@ import com.badlogic.gdx.math.Vector2
 import my.game.pkg.entity.{MovingNPC, NPC, PlayerEntity}
 import my.game.pkg.map.MapManager
 
-class NPCStorage {
+//NPCs for Town
+class TownNPCs extends MapNPCs {
 
+    //record boolean value for one time update and move for non-moving NPC
+    var firstMove = true
+    var firstUpdate = true
+
+    //NPCs for TOWN map
     val TownMovingNPC1 = MovingNPC(PlayerEntity.spritePatchRogue, MapManager.TOWN, 17, 9, 20, 15)
     val TownMovingNPC2 = MovingNPC(PlayerEntity.spritePatchEngineer, MapManager.TOWN, 10.8568f, 9.8568f, 8.5119f, 3.3652f)
     val TownNPC1 = NPC(PlayerEntity.spritePatchWarrior, MapManager.TOWN, 11.6835f, 23.3770f, Direction.DOWN)
@@ -22,8 +28,8 @@ class NPCStorage {
     def updateMovingNPCs(delta:Float): Unit ={
         TownMovingNPC1.update(delta)
         TownMovingNPC2.update(delta)
-        if(NPCStorage.firstUpdate) {
-            NPCStorage.firstUpdate = false
+        if(firstUpdate) {
+            firstUpdate = false
             TownNPC1.update(delta, State.IDLE)
             TownNPC2.update(delta, State.IDLE)
         }
@@ -32,8 +38,8 @@ class NPCStorage {
     def moveNPCs(): Unit ={
         TownMovingNPC1.move()
         TownMovingNPC2.move()
-        if(NPCStorage.firstMove) {
-            NPCStorage.firstMove = false
+        if(firstMove) {
+            firstMove = false
             TownNPC1.move()
             TownNPC2.move()
         }
@@ -46,17 +52,15 @@ class NPCStorage {
         batch.draw(TownNPC2.currentFrame, TownNPC2.frameSprite.getX, TownNPC2.frameSprite.getY, 1,1)
     }
 
+    def disposeNPCs(): Unit ={
+        TownMovingNPC1.dispose()
+        TownMovingNPC2.dispose()
+        TownNPC1.dispose()
+        TownNPC2.dispose()
+    }
+
   }
 
-  object NPCStorage{
-
-      //record boolean value for one time update and move for non-moving NPC
-      var firstMove = true
-      var firstUpdate = true
-
-      def apply():NPCStorage = {
-          firstMove = true
-          firstUpdate = true
-          return new NPCStorage
-      }
+object TownNPCs{
+    def apply():TownNPCs = new TownNPCs
 }

@@ -6,6 +6,8 @@ import my.game.pkg.entity.utils.Direction.Direction
 //positionX and position Y are for the coordinate of the NPC
 class NPC (spritePatch : String, val mapName : String, val positionX : Float, val positionY : Float) extends PlayerEntity(spritePatch){
 
+    init(new Vector2(positionX, positionY))
+
 }
 
 object NPC{
