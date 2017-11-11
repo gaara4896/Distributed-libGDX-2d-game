@@ -44,7 +44,6 @@ abstract class PlayerEntity {
 
 	/**
 	 * Move player
-	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
 	def move(){
 		currentPlayerPosition.x = nextPlayerPosition.x

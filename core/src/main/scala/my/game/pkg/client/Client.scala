@@ -21,18 +21,43 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 			game.gameUUID.foreach{uuid => clientActor ! Quit(uuid)}
 		}
 
+		/**
+		 * Update server when moved
+		 * @param  direction:Direction Direction of the player
+		 */
 		def move(direction:Direction){
 			game.gameUUID.foreach{uuid => clientActor ! Move(uuid, MainGameScreen.mapMgr.currentMapName, direction)}
 		}
 
+		/**
+		 * Update server when standstill
+		 * @param  x:Float X position of player
+		 * @param  y:Float Y position of player
+		 */
 		def standStill(x:Float, y:Float){
 			game.gameUUID.foreach{uuid => clientActor ! StandStill(uuid, MainGameScreen.mapMgr.currentMapName, x, y)}
 		}
 
+		/**
+		 * Update server when change map
+		 * @param  mapFrom:String Map the player changed from
+		 * @param  mapTo:String   Map the player changed to
+		 * @param  x:Float        X position of player starting point
+		 * @param  y:Float        Y position of player starting point
+		 */
 		def changeMap(mapFrom:String, mapTo:String, x:Float, y:Float){
 			game.gameUUID.foreach{uuid => clientActor ! ChangeMap(uuid, mapFrom, mapTo, x, y)}
 		}
 
+		/**
+		 * Update server player still alive
+		 * @param  delta:Float         Delta time of the frame
+		 * @param  map:String          Name of the map
+		 * @param  x:Float             X position of the player
+		 * @param  y:Float             Y position of the player
+		 * @param  direction:Direction Direction of the player
+		 * @param  state:State         State of the player
+		 */
 		def update(delta:Float, map:String, x:Float, y:Float, direction:Direction, state:State){
 			timeToPing -= delta
 			if(timeToPing <= 0){
@@ -40,19 +65,6 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 				timeToPing = 1.4f
 			}
 		}
-
-		/**
-		 * Send status to update server
-		 * @param  uuid:String         Client UUID
-		 * @param  map:String          Name of the current map
-		 * @param  x:Float             X position of player
-		 * @param  y:Float             Y position of player
-		 * @param  direction:Direction Direction player looking at
-		 * @param  frameTime:Float     frameTime of player
-		 */
-/*		def sendStatus(uuid:String, map:String, x:Float, y:Float, direction:Direction, frameTime:Float){
-			clientActor ! Update(uuid, map, x, y, direction, frameTime)
-		}*/
 
 		clientActor ! Connect
 }

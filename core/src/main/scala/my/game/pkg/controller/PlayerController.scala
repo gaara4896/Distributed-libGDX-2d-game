@@ -161,7 +161,6 @@ class PlayerController(val player:Player, val game:Distributedlibgdx2dgame) exte
 	/**
 	 * Update status of player controller
 	 * @param delta:Float                  Delta value of the time frame
-	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
 	def update(delta:Float){
 		if(KeyManager.LEFT){
@@ -191,8 +190,9 @@ object PlayerController{
 
 	/**
 	 * Apply method for creating PlayerController
-	 * @param  player:Player    Player of the game
-	 * @return PlayerController New instance of PlayerController
+	 * @param  player:Player                Player of the game
+	 * @param  game:Distributedlibgdx2dgame Main game class
+	 * @return PlayerController             New instance of PlayerController
 	 */
 	def apply(player:Player, game:Distributedlibgdx2dgame):PlayerController = new PlayerController(player, game)
 

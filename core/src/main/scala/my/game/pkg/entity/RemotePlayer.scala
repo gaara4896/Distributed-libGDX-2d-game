@@ -12,14 +12,7 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 
 	/**
 	 * Update the player to latest status
-	 * @param x:Float             X position of player
-	 * @param y:Float             Y position of player
-	 * @param direction:Direction Direction of the player
-	 * @param frame:Float         Frame time of player
-	 */
-	/**
-	 * Update the player to latest status
-	 * @param  delta:Float         Delta time value of the frame
+	 * @param  delta:Float Delta time value of the frame
 	 */
 	def update(delta:Float){
 		frameTime = (frameTime + delta)%5
@@ -50,17 +43,33 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 		setBoundingSize(0f, 0.5f)
 	}
 
+	/**
+	 * Set remote player to move state
+	 * @param direction:Direction Direction of the player
+	 */
 	def setMove(direction:Direction){
 		state = State.WALKING
 		currentDirection = direction
 	}
 
+	/**
+	 * Set remote player to stand still state
+	 * @param x:Float X position of the player
+	 * @param y:Float Y position of the player
+	 */
 	def setStandStill(x:Float, y:Float){
 		state = State.IDLE
 		currentPlayerPosition.x = x
 		currentPlayerPosition.y = y
 	}
 
+	/**
+	 * Correction on remote player status
+	 * @param  x:Float             X position of remote player
+	 * @param  y:Float             Y position of remote player
+	 * @param  direction:Direction Direction of remote player
+	 * @param  playerState:State   State of the remote player
+	 */
 	def correction(x:Float, y:Float, direction:Direction, playerState:State){
 		currentPlayerPosition.x = x
 		currentPlayerPosition.y = y
@@ -77,9 +86,6 @@ object RemotePlayer{
 	 * @param  uuid:String         UUID of the player  
 	 * @param  x:Float             Y position of the player
 	 * @param  y:Float             X position of the player
-	 * @param  direction:Direction Direction of the player
-	 * @param  frame:Float         Frame time of the player
-	 * @return RemotePlayer        New instance of RemotePlayer
 	 */
 	def apply(uuid:String, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, x, y)
 

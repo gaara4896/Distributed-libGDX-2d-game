@@ -15,9 +15,10 @@ class Player extends PlayerEntity {
 
 	/**
 	 * Update the player to latest status
-	 * @param  delta:Float         Delta time value of the frame
-	 * @param  direction:Direction Direction of the player
-	 * @param  currentState:State  State of the player
+	 * @param delta:Float                  Delta time value of the frame
+	 * @param direction:Direction          Direction of the player
+	 * @param currentState:State           State of the player
+	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
 	def update(delta:Float, direction:Direction, currentState:State, game:Distributedlibgdx2dgame){
 		frameTime = (frameTime + delta)%5
@@ -57,8 +58,9 @@ class Player extends PlayerEntity {
 
 	/**
 	 * Overloading method for updating the player status
-	 * @param  delta:Float        Delta time value of the frame
-	 * @param  currentState:State State of the player
+	 * @param delta:Float                  Delta time value of the frame
+	 * @param currentState:State           State of the player
+	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
 	def update(delta:Float, currentState:State, game:Distributedlibgdx2dgame){
 		update(delta, currentDirection, currentState, game)
