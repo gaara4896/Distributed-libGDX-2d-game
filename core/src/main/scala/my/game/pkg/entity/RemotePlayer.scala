@@ -1,15 +1,15 @@
 package my.game.pkg.entity
 
-import com.badlogic.gdx.graphics.g2d.Sprite
-
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
+import my.game.pkg.entity.utils.State
+import my.game.pkg.entity.utils.State._
 
-class RemotePlayer(val uuid:String, x:Float, y:Float, direction:Direction, frame:Float) extends PlayerEntity {
+class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 
-	var currentDirection = direction
-	var frameTime = frame
-	val frameSprite = new Sprite(currentFrame.getTexture(), x.asInstanceOf[Int], y.asInstanceOf[Int], PlayerEntity.FRAME_WIDTH, PlayerEntity.FRAME_HEIGHT)
+	currentPlayerPosition.x = x
+	currentPlayerPosition.y = y
+
 	/**
 	 * Update the player to latest status
 	 * @param x:Float             X position of player
@@ -17,23 +17,57 @@ class RemotePlayer(val uuid:String, x:Float, y:Float, direction:Direction, frame
 	 * @param direction:Direction Direction of the player
 	 * @param frame:Float         Frame time of player
 	 */
-	def update(x:Float, y:Float, direction:Direction, frame:Float){
+	/**
+	 * Update the player to latest status
+	 * @param  delta:Float         Delta time value of the frame
+	 */
+	def update(delta:Float){
+		frameTime = (frameTime + delta)%5
+
+		velocity.scl(delta)
+		if(state != State.IDLE){
+			currentDirection match{
+				case Direction.LEFT =>
+					nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
+					nextPlayerPosition.y = currentPlayerPosition.y
+					currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
+				case Direction.RIGHT =>
+					nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
+					nextPlayerPosition.y = currentPlayerPosition.y
+					currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
+				case Direction.UP =>
+					nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
+					nextPlayerPosition.x = currentPlayerPosition.x
+					currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
+				case Direction.DOWN =>
+					nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
+					nextPlayerPosition.x = currentPlayerPosition.x
+					currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
+				case _ =>
+			}
+		}
+		velocity.scl(1 / delta)
+		setBoundingSize(0f, 0.5f)
+	}
+
+	def setMove(direction:Direction){
+		state = State.WALKING
+		currentDirection = direction
+	}
+
+	def setStandStill(x:Float, y:Float){
+		state = State.IDLE
+		currentPlayerPosition.x = x
+		currentPlayerPosition.y = y
+	}
+
+	def correction(x:Float, y:Float, direction:Direction, playerState:State){
+		currentPlayerPosition.x = x
+		currentPlayerPosition.y = y
 		frameSprite.setX(x)
 		frameSprite.setY(y)
-		frameTime = frame
 		currentDirection = direction
-
-		currentDirection match{
-			case Direction.LEFT =>
-				currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
-			case Direction.RIGHT =>
-				currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
-			case Direction.UP =>
-				currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
-			case Direction.DOWN =>
-				currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
-			case _ =>
-		}
+		state = playerState
 	}
 }
 
@@ -47,8 +81,7 @@ object RemotePlayer{
 	 * @param  frame:Float         Frame time of the player
 	 * @return RemotePlayer        New instance of RemotePlayer
 	 */
-	def apply(uuid:String, x:Float, y:Float, direction:Direction, frame:Float):RemotePlayer = new RemotePlayer(uuid, x, y, direction, frame)
+	def apply(uuid:String, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, x, y)
 
 	private val TAG:String = RemotePlayer.getClass().getSimpleName()
-	private val defaultSpritePatch:String = "sprites/characters/Rogue.png"
 }

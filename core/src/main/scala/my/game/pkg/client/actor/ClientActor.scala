@@ -8,6 +8,8 @@ import my.game.pkg.entity.RemotePlayer
 import my.game.pkg.client.dictionary.ClientDictionary._
 import my.game.server.dictionary.ServerDictionary._
 
+import scala.util.control.Breaks._
+
 class ClientActor(val ipAddress:String, val port:String, val game:Distributedlibgdx2dgame) extends Actor{	
 
 	val remoteConnection = context.actorSelection(s"akka.tcp://bludbourne@$ipAddress:$port/user/serverconenction")
@@ -35,6 +37,58 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case StandStill(uuid, map, x, y) => remoteGameServer ! StandStill(uuid, map, x, y)
 		case ChangeMap(uuid, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, mapFrom, mapTo, x, y)
 		case Alive(uuid, map, x, y, direction, state) => remoteGameServer ! Alive(uuid, map, x, y, direction, state)
+		case PlayerMove(uuid, direction) => 
+			if(!uuid.equals(game.gameUUID)){
+				breakable{
+					for(remotePlayer <- MainGameScreen.remotePlayers){
+						if(remotePlayer.uuid.equals(uuid)){
+							remotePlayer.setMove(direction)
+							break
+						}
+					}
+				}
+				println("Move")
+			}
+		case PlayerStandStill(uuid, x, y) => 
+			if(!uuid.equals(game.gameUUID)){
+				var exist:Boolean = false
+				breakable{
+					for(remotePlayer <- MainGameScreen.remotePlayers){
+						if(remotePlayer.uuid.equals(uuid)){
+							remotePlayer.setStandStill(x, y)
+							exist = true
+							break
+						}
+					}
+				}
+				if(!exist){
+					MainGameScreen.remotePlayers += RemotePlayer(uuid, x, y)
+				}
+				println("StandStill")
+			}
+		case Correction(uuid, x, y, direction, playerState) => 
+			var exist:Boolean = false
+			breakable{
+				for(remotePlayer <- MainGameScreen.remotePlayers){
+					if(remotePlayer.uuid.equals(uuid)){
+						remotePlayer.correction(x, y, direction, playerState)
+						exist = true
+						break
+					}
+				}
+			}
+			if(!exist){
+				MainGameScreen.remotePlayers += RemotePlayer(uuid, x, y)
+			}
+			println("Correction")
+		case KillPlayer(uuid) => breakable{
+				for(remotePlayer <- MainGameScreen.remotePlayers){
+					if(remotePlayer.uuid.equals(uuid)){
+						MainGameScreen.remotePlayers -= remotePlayer
+					}
+				}
+			}
+			println("KillPlayer")
 /*		case Update(uuid, map, x, y, direction, frameTime) => remoteGameServer ! Update(uuid, map, x, y, direction, frameTime)
 		case UpdatePlayerStatus(uuid, x, y, direction, frameTime) => 
 			var exist:Boolean = false

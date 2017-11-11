@@ -1,17 +1,57 @@
 package my.game.pkg.entity
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.{Animation, Sprite, TextureRegion}
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.utils.Array
+
 import my.game.pkg.assets.AssetsManager
-import my.game.pkg.entity.utils.Direction._
+import my.game.pkg.entity.utils.Direction
+import my.game.pkg.entity.utils.State
+import my.game.pkg.map.MapManager
 
 abstract class PlayerEntity {
-	var currentDirection:Direction
-	var frameTime:Float
+	val velocity = new Vector2(10f, 10f)
+	var currentDirection = Direction.LEFT
+	var previousDirection = Direction.UP
+	var frameTime:Float = 0f
+	var state = State.IDLE
+	val currentPlayerPosition = new Vector2()
+	val nextPlayerPosition = new Vector2()
+	val boundingBox = new Rectangle()
 	var currentFrame:TextureRegion = PlayerEntity.walkDownFrames.get(0)
-	val frameSprite:Sprite
+	val frameSprite = new Sprite(currentFrame.getTexture(), 0, 0, PlayerEntity.FRAME_WIDTH, PlayerEntity.FRAME_HEIGHT)
+	
+	/**
+	 * Set bounding box size for the player
+	 * @param widthReduce:Float  Width reduced in percentage
+	 * @param heightReduce:Float Height reduced in percentage
+	 */
+	def setBoundingSize(widthReduce:Float, heightReduce:Float){
+		val width = PlayerEntity.FRAME_WIDTH * (1.0f - widthReduce)
+		val height = PlayerEntity.FRAME_HEIGHT * (1.0f - heightReduce)
 
+		if(width == 0 || height == 0){
+			Gdx.app.debug(PlayerEntity.TAG, s"Width and Height are 0! $width:$height")
+		}
+
+		val minX = nextPlayerPosition.x / MapManager.UNIT_SCALE
+		val minY = nextPlayerPosition.y / MapManager.UNIT_SCALE
+
+		boundingBox.set(minX, minY, width, height)
+	}
+
+	/**
+	 * Move player
+	 * @param game:Distributedlibgdx2dgame Main game class
+	 */
+	def move(){
+		currentPlayerPosition.x = nextPlayerPosition.x
+		currentPlayerPosition.y = nextPlayerPosition.y
+		frameSprite.setX(currentPlayerPosition.x)
+		frameSprite.setY(currentPlayerPosition.y)
+	}
 }
 
 object PlayerEntity{
@@ -41,6 +81,7 @@ object PlayerEntity{
 					}
 				}
 			}
+		case None => 
 	}
 	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
 	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
