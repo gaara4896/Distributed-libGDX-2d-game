@@ -30,6 +30,7 @@ class MapManager{
 
 	var currentMap:TiledMap = null
     var currentMapName:String = null
+    var previousMapName:String = null
     var collisionLayer:MapLayer = null
     var portalLayer:MapLayer = null
     var spawnsLayer:MapLayer = null
@@ -53,7 +54,9 @@ class MapManager{
                 AssetsManager.loadMapAsset(x)
                 AssetsManager.getMapAsset(x) match{
                     case Some(y) => currentMap = y.asInstanceOf[TiledMap]
+                        previousMapName = currentMapName
                         currentMapName = mapName
+                    case None => 
                 }
     	}
 

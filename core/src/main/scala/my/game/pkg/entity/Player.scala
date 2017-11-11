@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 
 import my.game.pkg.Distributedlibgdx2dgame
+import my.game.pkg.screen.MainGameScreen
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
@@ -29,7 +30,7 @@ class Player extends PlayerEntity {
 	 * @param  direction:Direction Direction of the player
 	 * @param  currentState:State  State of the player
 	 */
-	def update(delta:Float, direction:Direction, currentState:State){
+	def update(delta:Float, direction:Direction, currentState:State, game:Distributedlibgdx2dgame){
 		frameTime = (frameTime + delta)%5
 		previousDirection = currentDirection
 		currentDirection = direction
@@ -59,6 +60,10 @@ class Player extends PlayerEntity {
 		}
 		velocity.scl(1 / delta)
 		setBoundingSize(0f, 0.5f)
+		game.client match{
+			case Some(x) => x.update(delta, MainGameScreen.mapMgr.currentMapName, currentPlayerPosition.x, currentPlayerPosition.y, currentDirection, currentState:State)
+			case None => 
+		}
 	}
 
 	/**
@@ -66,8 +71,8 @@ class Player extends PlayerEntity {
 	 * @param  delta:Float        Delta time value of the frame
 	 * @param  currentState:State State of the player
 	 */
-	def update(delta:Float, currentState:State){
-		update(delta, currentDirection, currentState)
+	def update(delta:Float, currentState:State, game:Distributedlibgdx2dgame){
+		update(delta, currentDirection, currentState, game)
 	}
 
 	/**
@@ -112,17 +117,11 @@ class Player extends PlayerEntity {
 	 * @param game:Distributedlibgdx2dgame Main game class
 	 * @param mapName:String               Current map name
 	 */
-	def move(game:Distributedlibgdx2dgame, mapName:String){
+	def move(){
 		currentPlayerPosition.x = nextPlayerPosition.x
 		currentPlayerPosition.y = nextPlayerPosition.y
 		frameSprite.setX(currentPlayerPosition.x)
 		frameSprite.setY(currentPlayerPosition.y)
-		game.client match{
-			case Some(x) => game.gameUUID.foreach{uuid =>
-					x.sendStatus(uuid, mapName, currentPlayerPosition.x, currentPlayerPosition.y, currentDirection, frameTime)
-				}
-			case None => 
-		}
 	}
 }
 

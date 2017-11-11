@@ -4,12 +4,16 @@ import com.badlogic.gdx.{Gdx, Input, InputProcessor}
 import com.badlogic.gdx.math.Vector3
 
 import my.game.pkg.Distributedlibgdx2dgame
+import my.game.pkg.screen.MainGameScreen
 import my.game.pkg.entity.Player
 import my.game.pkg.entity.utils.{Direction, State}
 
-class PlayerController(val player:Player) extends InputProcessor{
+import scala.collection.mutable.ListBuffer
+
+class PlayerController(val player:Player, val game:Distributedlibgdx2dgame) extends InputProcessor{
 
 	private val lastMourseCoordinates = new Vector3()
+	private val lastButtonPressed = new ListBuffer[Int]()
 
 	/**
 	 * Triggered when any key is pressed
@@ -17,14 +21,23 @@ class PlayerController(val player:Player) extends InputProcessor{
 	 * @return Boolean     True when is processed
 	 */
 	override def keyDown(keycode:Int):Boolean = {
+		PlayerController.hide()
 		if( keycode == Input.Keys.LEFT || keycode == Input.Keys.A){
 			KeyManager.LEFT = true
+			lastButtonPressed += keycode
+			game.client.foreach{client => client.move(Direction.LEFT)}
 		} else if( keycode == Input.Keys.RIGHT || keycode == Input.Keys.D){
 			KeyManager.RIGHT = true
+			lastButtonPressed += keycode
+			game.client.foreach{client => client.move(Direction.RIGHT)}
 		} else if( keycode == Input.Keys.UP || keycode == Input.Keys.W){
 			KeyManager.UP = true
+			lastButtonPressed += keycode
+			game.client.foreach{client => client.move(Direction.UP)}
 		} else if( keycode == Input.Keys.DOWN || keycode == Input.Keys.S){
 			KeyManager.DOWN = true
+			lastButtonPressed += keycode
+			game.client.foreach{client => client.move(Direction.DOWN)}
 		} else if( keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE){
 			KeyManager.QUIT = true
 		}
@@ -39,14 +52,38 @@ class PlayerController(val player:Player) extends InputProcessor{
 	override def keyUp(keycode:Int):Boolean = {
 		if( keycode == Input.Keys.LEFT || keycode == Input.Keys.A){
 			KeyManager.LEFT = false
+			lastButtonPressed -= keycode
 		} else if( keycode == Input.Keys.RIGHT || keycode == Input.Keys.D){
 			KeyManager.RIGHT = false
+			lastButtonPressed -= keycode
 		} else if( keycode == Input.Keys.UP || keycode == Input.Keys.W){
 			KeyManager.UP = false
+			lastButtonPressed -= keycode
 		} else if( keycode == Input.Keys.DOWN || keycode == Input.Keys.S){
 			KeyManager.DOWN = false
+			lastButtonPressed -= keycode
 		} else if( keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE){
 			KeyManager.QUIT = false
+		}
+		lastButtonPressed.synchronized{
+			if(lastButtonPressed.size > 0){
+				val lastKeyCode:Int = lastButtonPressed.last
+				if( lastKeyCode == Input.Keys.LEFT || lastKeyCode == Input.Keys.A){
+					KeyManager.LEFT = true
+					game.client.foreach{client => client.move(Direction.LEFT)}
+				} else if( lastKeyCode == Input.Keys.RIGHT || lastKeyCode == Input.Keys.D){
+					KeyManager.RIGHT = true
+					game.client.foreach{client => client.move(Direction.RIGHT)}
+				} else if( lastKeyCode == Input.Keys.UP || lastKeyCode == Input.Keys.W){
+					KeyManager.UP = true
+					game.client.foreach{client => client.move(Direction.UP)}
+				} else if( lastKeyCode == Input.Keys.DOWN || lastKeyCode == Input.Keys.S){
+					KeyManager.DOWN = true
+					game.client.foreach{client => client.move(Direction.DOWN)}
+				}
+			} else{
+				game.client.foreach{client => client.standStill(MainGameScreen.player.currentPlayerPosition.x, MainGameScreen.player.currentPlayerPosition.y)}
+			}
 		}
 		true
 	}
@@ -126,22 +163,20 @@ class PlayerController(val player:Player) extends InputProcessor{
 	 * @param delta:Float                  Delta value of the time frame
 	 * @param game:Distributedlibgdx2dgame Main game class
 	 */
-	def update(delta:Float, game:Distributedlibgdx2dgame){
+	def update(delta:Float){
 		if(KeyManager.LEFT){
-			player.update(delta, Direction.LEFT, State.WALKING)
+			player.update(delta, Direction.LEFT, State.WALKING, game)
 		} else if(KeyManager.RIGHT){
-			player.update(delta, Direction.RIGHT, State.WALKING)
+			player.update(delta, Direction.RIGHT, State.WALKING, game)
 		} else if(KeyManager.UP){
-			player.update(delta, Direction.UP, State.WALKING)
+			player.update(delta, Direction.UP, State.WALKING, game)
 		} else if(KeyManager.DOWN){
-			player.update(delta, Direction.DOWN, State.WALKING)
+			player.update(delta, Direction.DOWN, State.WALKING, game)
 		} else if(KeyManager.QUIT){
-			game.client match{
-				case Some(x) => x.quit()
-			}
+			game.client.foreach{x => x.quit()}
 			Gdx.app.exit()
 		} else {
-			player.update(delta, State.IDLE)
+			player.update(delta, State.IDLE, game)
 		}
 	}
 
@@ -159,7 +194,7 @@ object PlayerController{
 	 * @param  player:Player    Player of the game
 	 * @return PlayerController New instance of PlayerController
 	 */
-	def apply(player:Player):PlayerController = new PlayerController(player)
+	def apply(player:Player, game:Distributedlibgdx2dgame):PlayerController = new PlayerController(player, game)
 
 	private val TAG:String = PlayerController.getClass().getSimpleName()
 

@@ -20,7 +20,7 @@ import scala.collection.mutable.ListBuffer
 
 class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
-	val controller = PlayerController(MainGameScreen.player)
+	val controller = PlayerController(MainGameScreen.player, game)
 	var currentPlayerFrame:TextureRegion = null
 	var currentPlayerSprite = MainGameScreen.player.frameSprite
 	val mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
@@ -40,7 +40,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
-		MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
+		MainGameScreen.player.move()
 		Gdx.input.setInputProcessor(controller)
 	}
 
@@ -57,14 +57,14 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-		controller.update(delta, game)
+		controller.update(delta)
 		currentPlayerFrame = MainGameScreen.player.currentFrame
 
 		if(MainGameScreen.player.state == State.WALKING){
 			updatePortalLayerActivation(MainGameScreen.player.boundingBox)
 
 			if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
-				MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
+				MainGameScreen.player.move()
 			}
 		}
 		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
@@ -162,6 +162,11 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
+					game.client match{
+						case Some(x) => x.changeMap(MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName, 
+							MainGameScreen.player.currentPlayerPosition.x, MainGameScreen.player.currentPlayerPosition.y)
+						case None => 
+					}
 					return true
 				}
 			}
