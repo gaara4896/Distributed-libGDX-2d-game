@@ -129,10 +129,10 @@ class Player extends PlayerEntity {
 object Player{
 
 	/**
-	 * Apply method for creating Player
-	 * @return Player New instance of Player
-	 */
-	def apply():Player = new Player()
+		* Apply method for creating Player
+		* @return Player New instance of Player
+		*/
+	def apply(playername : String, spritePatch : String):Player = new Player(playername, spritePatch)
 
 	private val TAG:String = Player.getClass().getSimpleName()
 }

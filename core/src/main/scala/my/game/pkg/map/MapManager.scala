@@ -29,7 +29,7 @@ class MapManager{
 	val convertedUnits = new Vector2(0,0)
 
 	var currentMap:TiledMap = null
-    var currentMapName:String = null
+		var currentMapName:String = null
     var collisionLayer:MapLayer = null
     var portalLayer:MapLayer = null
     var spawnsLayer:MapLayer = null
@@ -154,9 +154,9 @@ object MapManager{
 
 	private val TAG:String = MapManager.getClass.getSimpleName()
 
-	private val TOP_WORLD:String = "TOP_WORLD"
-	private val TOWN:String = "TOWN"
-	private val CASTLE_OF_DOOM:String = "CASTLE_OF_DOOM"
+	val TOP_WORLD:String = "TOP_WORLD"
+	val TOWN:String = "TOWN"
+	val CASTLE_OF_DOOM:String = "CASTLE_OF_DOOM"
 	private val MAP_COLLISION_LAYER:String = "MAP_COLLISION_LAYER"
 	private val MAP_SPAWNS_LAYER:String = "MAP_SPAWNS_LAYER"
 	private val MAP_PORTAL_LAYER:String = "MAP_PORTAL_LAYER"
