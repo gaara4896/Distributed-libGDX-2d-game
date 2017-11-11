@@ -2,6 +2,7 @@ package my.game.pkg.entity.utils
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.entity.{MovingNPC, NPC, PlayerEntity}
 import my.game.pkg.map.MapManager
 
@@ -35,13 +36,13 @@ class TownNPCs extends MapNPCs {
         }
     }
 
-    def moveNPCs(): Unit ={
-        TownMovingNPC1.move()
-        TownMovingNPC2.move()
+    def moveNPCs(game : Distributedlibgdx2dgame, mapName : String): Unit ={
+        TownMovingNPC1.move(game, mapName)
+        TownMovingNPC2.move(game, mapName)
         if(firstMove) {
             firstMove = false
-            TownNPC1.move()
-            TownNPC2.move()
+            TownNPC1.move(game, mapName)
+            TownNPC2.move(game, mapName)
         }
     }
 

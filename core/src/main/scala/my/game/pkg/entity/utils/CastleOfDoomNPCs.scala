@@ -2,6 +2,7 @@ package my.game.pkg.entity.utils
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.entity.{NPC, PlayerEntity}
 import my.game.pkg.map.MapManager
 
@@ -42,15 +43,15 @@ class CastleOfDoomNPCs extends MapNPCs {
         }
     }
 
-    def moveNPCs(): Unit ={
+    def moveNPCs(game : Distributedlibgdx2dgame, mapName:String): Unit ={
         if(firstMove) {
             firstMove = false
-            CastleNPC1.move()
-            CastleNPC2.move()
-            CastleNPC3.move()
-            CastleNPC4.move()
-            CastleNPC5.move()
-            CastleNPC6.move()
+            CastleNPC1.move(game, mapName)
+            CastleNPC2.move(game, mapName)
+            CastleNPC3.move(game, mapName)
+            CastleNPC4.move(game, mapName)
+            CastleNPC5.move(game, mapName)
+            CastleNPC6.move(game, mapName)
         }
     }
 

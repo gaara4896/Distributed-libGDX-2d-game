@@ -1,13 +1,14 @@
 package my.game.pkg.entity.utils
 
 import com.badlogic.gdx.graphics.g2d.Batch
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 
 //base class for different map NPCs class
 abstract class MapNPCs {
     def initNPCs()
     def updateMovingNPCs(delta : Float)
-    def moveNPCs()
+    def moveNPCs(game : Distributedlibgdx2dgame, mapName : String)
     def drawNPCs(batch : Batch)
     def disposeNPCs()
 }

@@ -12,9 +12,10 @@ import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
 import my.game.pkg.entity.utils.{MapNPCs, TownNPCs}
-import my.game.pkg.entity.{MovingNPC, NPC, Player, PlayerEntity}
+import my.game.pkg.entity._
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
@@ -38,9 +39,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
-
-		//init NPCs
-		//MainGameScreen.NPCs.initNPCs()
+		MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
 
 		Gdx.input.setInputProcessor(controller)
 	}
@@ -61,7 +60,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
 		camera.update
 
-		controller.update(delta)
+		controller.update(delta, game)
 
 		//update moving NPCs
 		MainGameScreen.NPCs.updateMovingNPCs(delta)
@@ -71,13 +70,13 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		updatePortalLayerActivation(MainGameScreen.player.boundingBox)
 
 		if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
-			MainGameScreen.player.move()
+			MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
 		}
 
 		//move NPCs
-		MainGameScreen.NPCs.moveNPCs()
+		MainGameScreen.NPCs.moveNPCs(game, MainGameScreen.mapMgr.currentMapName)
 
-		controller.update(delta)
+		controller.update(delta, game)
 
 		//update moving NPCs
 		MainGameScreen.NPCs.updateMovingNPCs(delta)
@@ -86,7 +85,9 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		mapRenderer.render()
 		mapRenderer.getBatch().begin()
 		mapRenderer.getBatch().draw(currentPlayerFrame, currentPlayerSprite.getX, currentPlayerSprite.getY, 1, 1)
-
+		for(remotePlayer <- MainGameScreen.remotePlayers){
+			mapRenderer.getBatch.draw(remotePlayer.currentFrame, remotePlayer.frameSprite.getX, remotePlayer.frameSprite.getY)
+		}
 		//draw NPCs
 		MainGameScreen.NPCs.drawNPCs(mapRenderer.getBatch)
 
@@ -204,6 +205,7 @@ object MainGameScreen {
 
 	var mapMgr:MapManager = MapManager()
 	val player = Player("Tony", PlayerEntity.spritePatchWarrior)
+	val remotePlayers = new ListBuffer[RemotePlayer]()
 
 	//set first NPCs to TOWN NPCs
 	var NPCs = MapNPCs(MapManager.TOWN)

@@ -2,7 +2,7 @@ package my.game.pkg.controller
 
 import com.badlogic.gdx.{Gdx, Input, InputProcessor}
 import com.badlogic.gdx.math.Vector3
-
+import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.entity.Player
 import my.game.pkg.entity.utils.{Direction, State}
 
@@ -124,7 +124,7 @@ class PlayerController(val player:Player) extends InputProcessor{
 	 * Update status of player controller
 	 * @param  delta:Float Delta value of the time frame
 	 */
-	def update(delta:Float){
+	def update(delta:Float, game:Distributedlibgdx2dgame){
 		if(KeyManager.LEFT){
 			player.update(delta, Direction.LEFT, State.WALKING)
 		} else if(KeyManager.RIGHT){
@@ -134,6 +134,9 @@ class PlayerController(val player:Player) extends InputProcessor{
 		} else if(KeyManager.DOWN){
 			player.update(delta, Direction.DOWN, State.WALKING)
 		} else if(KeyManager.QUIT){
+			game.client match{
+        case Some(x) => x.quit()
+      }
 			Gdx.app.exit()
 		} else {
 			player.update(delta, State.IDLE)
