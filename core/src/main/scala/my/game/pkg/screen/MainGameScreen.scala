@@ -6,20 +6,20 @@ import com.badlogic.gdx.graphics.{GL20, OrthographicCamera}
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.{Rectangle, Vector2}
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
-import my.game.pkg.entity.utils.{MapNPCs, TownNPCs}
-import my.game.pkg.entity._
+import my.game.pkg.entity.{Player, RemotePlayer}
+import my.game.pkg.entity.utils.State
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
 class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
-	val controller = PlayerController(MainGameScreen.player)
+	val controller = PlayerController(MainGameScreen.player, game)
 	var currentPlayerFrame:TextureRegion = null
 	var currentPlayerSprite = MainGameScreen.player.frameSprite
 	val mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
@@ -39,8 +39,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.app.debug(MainGameScreen.TAG, s"UnitScale Value is: ${mapRenderer.getUnitScale()}")
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
-		MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
-
+		MainGameScreen.player.move()
 		Gdx.input.setInputProcessor(controller)
 	}
 
@@ -57,40 +56,43 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+		controller.update(delta)
+		//MainGameScreen.NPCs.updateMovingNPCs(delta)
+		currentPlayerFrame = MainGameScreen.player.currentFrame
+
+		if(MainGameScreen.player.state == State.WALKING){
+			updatePortalLayerActivation(MainGameScreen.player.boundingBox)
+
+			if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
+				MainGameScreen.player.move()
+			}
+		}
+
+		for(remotePlayer <- MainGameScreen.remotePlayers){
+			remotePlayer.update(delta)
+			if(remotePlayer.state == State.WALKING){
+				if(!isCollisionWithMapLayer(remotePlayer.boundingBox)){
+					remotePlayer.move()
+				}
+			}
+		}
+
+		//MainGameScreen.NPCs.moveNPCs()
 		camera.position.set(currentPlayerSprite.getX(), currentPlayerSprite.getY(), 0f)
 		camera.update
 
-		controller.update(delta, game)
-
-		//update moving NPCs
-		MainGameScreen.NPCs.updateMovingNPCs(delta)
-
-		currentPlayerFrame = MainGameScreen.player.currentFrame
-
-		updatePortalLayerActivation(MainGameScreen.player.boundingBox)
-
-		if(!isCollisionWithMapLayer(MainGameScreen.player.boundingBox)){
-			MainGameScreen.player.move(game, MainGameScreen.mapMgr.currentMapName)
-		}
-
-		//move NPCs
-		MainGameScreen.NPCs.moveNPCs(game, MainGameScreen.mapMgr.currentMapName)
-
-		controller.update(delta, game)
-
-		//update moving NPCs
-		MainGameScreen.NPCs.updateMovingNPCs(delta)
+		//MainGameScreen.NPCs.updateMovingNPCs(delta)
 
 		mapRenderer.setView(camera)
 		mapRenderer.render()
 		mapRenderer.getBatch().begin()
 		mapRenderer.getBatch().draw(currentPlayerFrame, currentPlayerSprite.getX, currentPlayerSprite.getY, 1, 1)
-		for(remotePlayer <- MainGameScreen.remotePlayers){
-			mapRenderer.getBatch.draw(remotePlayer.currentFrame, remotePlayer.frameSprite.getX, remotePlayer.frameSprite.getY)
-		}
-		//draw NPCs
-		MainGameScreen.NPCs.drawNPCs(mapRenderer.getBatch)
 
+		//MainGameScreen.NPCs.drawNPCs(mapRenderer.getBatch)
+
+		for(remotePlayer <- MainGameScreen.remotePlayers){
+			mapRenderer.getBatch().draw(remotePlayer.currentFrame, remotePlayer.frameSprite.getX, remotePlayer.frameSprite.getY, 1, 1)
+		}
 		mapRenderer.getBatch().end()
 		spriteBatch.begin
 		font.draw(spriteBatch, s"FPS:${Gdx.graphics.getFramesPerSecond}", 0, 480)
@@ -171,18 +173,22 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 						return false
 					}
 
-					//dispose current map's NPCs and generate another map's NPCs
-					MainGameScreen.NPCs.disposeNPCs()
+					//MainGameScreen.NPCs.disposeNPCs()
 
-					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.currentPlayerPosition)
+					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.position)
 					MainGameScreen.mapMgr.loadMap(mapName)
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 
-					//set new MapNPCs value to NPCs and init
-					MainGameScreen.NPCs = MapNPCs(mapName)
+					//MainGameScreen.NPCs = MapNPCs(mapName)
 
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
+					game.client match{
+						case Some(x) => x.changeMap(MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName, 
+							MainGameScreen.player.position.x, MainGameScreen.player.position.y)
+						case None => 
+					}
+					MainGameScreen.remotePlayers.clear
 					return true
 				}
 			}
@@ -196,19 +202,18 @@ object MainGameScreen {
 
 	/**
 	 * Apply method for creating MainGameScreen
-	 * @param game:Distributedlibgdx2dgame Main game class
-	 * @return MainGameScreen New instance of MainGameScreen
+	 * @param  game:Distributedlibgdx2dgame Main game class
+	 * @return MainGameScreen               New instance of MainGameScreen
 	 */
 	def apply(game:Distributedlibgdx2dgame):MainGameScreen = new MainGameScreen(game)
 
 	private val TAG:String = MainGameScreen.getClass.getSimpleName
 
 	var mapMgr:MapManager = MapManager()
-	val player = Player("Tony", PlayerEntity.spritePatchWarrior)
-	val remotePlayers = new ListBuffer[RemotePlayer]()
 
-	//set first NPCs to TOWN NPCs
-	var NPCs = MapNPCs(MapManager.TOWN)
+	//var NPCs = MapNPCs(MapManager.TOWN)
+	val player = Player()
+	val remotePlayers = new ListBuffer[RemotePlayer]()
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0

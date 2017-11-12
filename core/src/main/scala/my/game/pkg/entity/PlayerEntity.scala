@@ -5,55 +5,78 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.{Animation, Sprite, TextureRegion}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.utils.Array
+
 import my.game.pkg.assets.AssetsManager
-import my.game.pkg.entity.utils.Direction.Direction
-import my.game.pkg.entity.utils.{Direction, State}
-import my.game.pkg.entity.utils.State.State
+import my.game.pkg.entity.utils.Direction
 import my.game.pkg.map.MapManager
 
-abstract class PlayerEntity (val spritePatch : String) {
+abstract class PlayerEntity extends Entity{
 
-    var currentDirection = Direction.LEFT
-    var frameTime:Float = 0f
+	val velocity = new Vector2(10f, 10f)
+	var previousDirection = Direction.UP
+	val nextPosition = new Vector2()
+	val boundingBox = new Rectangle()
+	var currentFrame:TextureRegion = PlayerEntity.walkDownFrames.get(0)
+	val frameSprite = new Sprite(currentFrame.getTexture(), 0, 0, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)
+	
+	/**
+	 * Set bounding box size for the player
+	 * @param widthReduce:Float  Width reduced in percentage
+	 * @param heightReduce:Float Height reduced in percentage
+	 */
+	def setBoundingSize(widthReduce:Float, heightReduce:Float){
+		val width = Entity.FRAME_WIDTH * (1.0f - widthReduce)
+		val height = Entity.FRAME_HEIGHT * (1.0f - heightReduce)
 
-    AssetsManager.loadTextureAsset(spritePatch)
-    val texture:Option[Texture] = AssetsManager.getTextureAsset(spritePatch)
-    val walkDownFrames = new Array[TextureRegion](4)
-    val walkLeftFrames = new Array[TextureRegion](4)
-    val walkRightFrames = new Array[TextureRegion](4)
-    val walkUpFrames = new Array[TextureRegion](4)
-    texture match{
-        case Some(tex) =>
-            for(x <- 0 to 3; val textureFrames:scala.Array[scala.Array[TextureRegion]] = TextureRegion.split(tex, PlayerEntity.FRAME_WIDTH, PlayerEntity.FRAME_HEIGHT)){
-                for(y <- 0 to 3){
-                    x match{
-                        case 0 => walkDownFrames.insert(y, textureFrames(x)(y))
-                        case 1 => walkLeftFrames.insert(y, textureFrames(x)(y))
-                        case 2 => walkRightFrames.insert(y, textureFrames(x)(y))
-                        case 3 => walkUpFrames.insert(y, textureFrames(x)(y))
-                }
-            }
-        }
-    }
-    val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
-    val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
-    val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
-    val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
+		if(width == 0 || height == 0){
+			Gdx.app.debug(PlayerEntity.TAG, s"Width and Height are 0! $width:$height")
+		}
 
-    var currentFrame:TextureRegion = walkDownFrames.get(0)
+		val minX = nextPosition.x / MapManager.UNIT_SCALE
+		val minY = nextPosition.y / MapManager.UNIT_SCALE
+
+		boundingBox.set(minX, minY, width, height)
+	}
+
+	/**
+	 * Move player
+	 */
+	def move(){
+		position.x = nextPosition.x
+		position.y = nextPosition.y
+		frameSprite.setX(position.x)
+		frameSprite.setY(position.y)
+	}
 }
 
 object PlayerEntity{
 
-  private val TAG:String = PlayerEntity.getClass().getSimpleName()
+	private val TAG:String = PlayerEntity.getClass().getSimpleName()
 
-  val spritePatchWarrior = "sprites/characters/Warrior.png"
-  val spritePatchRogue = "sprites/characters/Rogue.png"
-  val spritePatchEngineer = "sprites/characters/Engineer.png"
-  val spritePatchPaladin = "sprites/characters/Paladin.png"
-  val spritePatchMage = "sprites/characters/Mage.png"
+	val defaultSpritePatch:String = Entity.spritePatchWarrior
 
-  val FRAME_WIDTH = 16
-  val FRAME_HEIGHT = 16
-
+	AssetsManager.loadTextureAsset(PlayerEntity.defaultSpritePatch)
+	val texture:Option[Texture] = AssetsManager.getTextureAsset(PlayerEntity.defaultSpritePatch)
+	val walkDownFrames = new Array[TextureRegion](4)
+	val walkLeftFrames = new Array[TextureRegion](4)
+	val walkRightFrames = new Array[TextureRegion](4)
+	val walkUpFrames = new Array[TextureRegion](4)
+	texture match{
+		case Some(tex) =>
+			for(x <- 0 to 3; val textureFrames:scala.Array[scala.Array[TextureRegion]] = TextureRegion.split(tex, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)){
+				for(y <- 0 to 3){
+					x match{
+						case 0 => walkDownFrames.insert(y, textureFrames(x)(y))
+						case 1 => walkLeftFrames.insert(y, textureFrames(x)(y))
+						case 2 => walkRightFrames.insert(y, textureFrames(x)(y))
+						case 3 => walkUpFrames.insert(y, textureFrames(x)(y))
+					}
+				}
+			}
+		case None => 
+	}
+	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
+	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
+	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
+	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
 }
