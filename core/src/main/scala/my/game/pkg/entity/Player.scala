@@ -77,6 +77,11 @@ class Player extends PlayerEntity {
 		nextPosition.y = position.y.toInt
 	}
 
+	override def move(){
+		super.move()
+		println(s"${position.x}, ${position.y}")
+	}
+
 	/**
 	 * Dispose of asset when not needed
 	 */
