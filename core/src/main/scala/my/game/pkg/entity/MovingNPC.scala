@@ -1,47 +1,75 @@
-/*package my.game.pkg.entity
+package my.game.pkg.entity
+
+import com.badlogic.gdx.graphics.g2d.{Animation, TextureRegion}
+import com.badlogic.gdx.math.Vector2
 
 import my.game.pkg.entity.utils.{Direction, State}
-import my.game.pkg.entity.utils.State.State
+import my.game.pkg.entity.utils.Direction._
+
+import scala.collection.mutable.Queue
+import scala.util.Random
 
 //Xmax, Xmin, Ymax and Ymin provides the coordinate for the square movement of the NPC
-class MovingNPC (spritePatch:String, mapName:String, val Xmax:Float, val Xmin:Float, val Ymax:Float, val Ymin:Float) extends NPC(spritePatch, mapName, Xmax, Ymax){
+class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends NPC(spritePatch, Direction.RIGHT){
 
-	var directionToGo = currentDirection
-	var moveCount : Int = 0
+	val velocity = new Vector2(3f, 3f)
+	var directionSequence = Queue(Direction.DOWN, Direction.LEFT, Direction.UP)
+	var walkingDirection:Direction = Direction.RIGHT
+	var countDownRange:Float = rangeX
+	var restTime:Float = 0
+	state = State.WALKING
 
-	//moving the NPC in square according to given coordinates
-	override def update(delta:Float, currentState:State){
-		if(position.x >= Xmax-0.5 && position.x <= Xmax+0.5 && currentDirection == Direction.RIGHT){
-		  directionToGo = Direction.DOWN
-		}
-		else if(position.x >= Xmin-0.5 && position.x <= Xmin+0.5 && currentDirection == Direction.LEFT){
-		  directionToGo = Direction.UP
-		}
-		else if(position.y >= Ymax-0.5 && position.y <= Ymax+0.5 && currentDirection == Direction.UP){
-		  directionToGo = Direction.RIGHT
-		}
-		else if(position.y >= Ymin-0.5 && position.y <= Ymin+0.5 && currentDirection == Direction.DOWN){
-		  directionToGo = Direction.LEFT
-		}
-		else{
-		  update(delta/5, currentDirection, currentState)
-		  return
-		}
+	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
+	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
+	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
+	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
 
-		//make the NPC wait for 50 frames before moving to another direction
-		if(moveCount >= 50){
-		  moveCount = 0
-		  update(delta/5, directionToGo, currentState)
+	def update(delta:Float){
+		state match{
+			case State.IDLE => 
+				restTime -= delta
+				if(restTime <= 0) {
+					state = State.WALKING
+					directionSequence += walkingDirection
+					walkingDirection = directionSequence.dequeue()
+					if(walkingDirection == Direction.RIGHT || walkingDirection == Direction.LEFT){
+						countDownRange = rangeX
+					} else {
+						countDownRange = rangeY
+					}
+				}
+			case State.WALKING => 
+				frameTime += delta
+				velocity.scl(delta)
+				walkingDirection match{
+					case Direction.LEFT =>
+						position.x -= velocity.x
+						frameSprite.setX(position.x)
+						countDownRange -= velocity.x
+						currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
+					case Direction.RIGHT =>
+						position.x += velocity.x
+						frameSprite.setX(position.x)
+						countDownRange -= velocity.x
+						currentFrame = walkRightAnimation.getKeyFrame(frameTime)
+					case Direction.UP =>
+						position.y += velocity.y
+						frameSprite.setY(position.y)
+						countDownRange -= velocity.y
+						currentFrame = walkUpAnimation.getKeyFrame(frameTime)
+					case Direction.DOWN =>
+						position.y -= velocity.y
+						frameSprite.setY(position.y)
+						countDownRange -= velocity.y
+						currentFrame = walkDownAnimation.getKeyFrame(frameTime)
+					case _ =>
+				}
+				velocity.scl(1 / delta)
+				if(countDownRange <= 0){
+					state = State.IDLE
+					restTime = 1f + (Random.nextFloat % 5f)
+				}
 		}
-		else {
-		  moveCount = moveCount + 1
-		  update(delta, currentDirection, State.IDLE)
-		}
-
-	}
-
-	def update(delta : Float): Unit ={
-		update(delta, State.WALKING)
 	}
 }
 
@@ -50,7 +78,7 @@ object MovingNPC{
 	  * Apply method for creating NPC
 	  * @return NPC New instance of NPC
 	  */
-	def apply(spritePatch : String, mapName : String, Xmax : Float, Xmin : Float, Ymax : Float, Ymin : Float):MovingNPC = new MovingNPC(spritePatch, mapName, Xmax, Xmin, Ymax, Ymin)
+	def apply(spritePatch:String, rangeX:Float, rangeY:Float):MovingNPC = new MovingNPC(spritePatch, rangeX, rangeY)
 
 	private val TAG:String = MovingNPC.getClass().getSimpleName()
-}*/
+}

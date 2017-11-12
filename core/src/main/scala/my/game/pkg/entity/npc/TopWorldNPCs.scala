@@ -1,50 +1,39 @@
-/*package my.game.pkg.entity.utils
+package my.game.pkg.entity.npc
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import my.game.pkg.entity.{MovingNPC, PlayerEntity}
-import my.game.pkg.map.MapManager
 
-//NPCs for Top World
+import my.game.pkg.entity.{MovingNPC, Entity}
+
 class TopWorldNPCs extends MapNPCs {
 
-	//record boolean value for one time update and move for non-moving NPC
 	var firstMove = true
 	var firstUpdate = true
 
-	//NPCs for TOP WORLD
-	val topWorldMovingNPC1 = MovingNPC(PlayerEntity.spritePatchWarrior, MapManager.TOP_WORLD, 48.0329f, 47.5329f, 68.2196f, 62.2196f)
-	val topWorldMovingNPC2 = MovingNPC(PlayerEntity.spritePatchWarrior, MapManager.TOP_WORLD, 17.6086f, 16.6086f, 23.1235f, 18.5943f)
+	val topWorldMovingNPC1 = MovingNPC(Entity.spritePatchWarrior, 0.5f, 5f)
+	val topWorldMovingNPC2 = MovingNPC(Entity.spritePatchWarrior, 1f, 4.5292f)
+	val topWorldMovingNPC3 = MovingNPC(Entity.spritePatchMage, 7.3f, 2f)
+	val topWorldMovingNPC4 = MovingNPC(Entity.spritePatchPaladin, 22f, 9.5f)
 
-	def initNPCs(): Unit ={
-		topWorldMovingNPC1.init(new Vector2(topWorldMovingNPC1.positionX, topWorldMovingNPC1.positionY))
-		topWorldMovingNPC2.init(new Vector2(topWorldMovingNPC2.positionX, topWorldMovingNPC2.positionY))
+	def init(){
+		topWorldMovingNPC1.init(new Vector2(47.1329f, 68.2196f))
+		topWorldMovingNPC2.init(new Vector2(16.6086f, 23.1235f))
+		topWorldMovingNPC3.init(new Vector2(45.7690f, 30.3483f))
+		topWorldMovingNPC4.init(new Vector2(15.2256f, 34.9951f))
 	}
 
-	def updateMovingNPCs(delta:Float): Unit ={
+	def update(delta:Float){
 		topWorldMovingNPC1.update(delta)
 		topWorldMovingNPC2.update(delta)
-		if(firstUpdate) {
-			firstUpdate = false
-		}
+		topWorldMovingNPC3.update(delta)
+		topWorldMovingNPC4.update(delta)
 	}
 
-	def moveNPCs(): Unit ={
-		topWorldMovingNPC1.move()
-		topWorldMovingNPC2.move()
-		if(firstMove) {
-			firstMove = false
-		}
-	}
-
-	def drawNPCs(batch: Batch): Unit ={
+	def draw(batch: Batch){
 		batch.draw(topWorldMovingNPC1.currentFrame, topWorldMovingNPC1.frameSprite.getX, topWorldMovingNPC1.frameSprite.getY, 1, 1)
 		batch.draw(topWorldMovingNPC2.currentFrame, topWorldMovingNPC2.frameSprite.getX, topWorldMovingNPC2.frameSprite.getY, 1, 1)
-	}
-
-	def disposeNPCs(): Unit = {
-		topWorldMovingNPC1.dispose()
-		topWorldMovingNPC2.dispose()
+		batch.draw(topWorldMovingNPC3.currentFrame, topWorldMovingNPC3.frameSprite.getX, topWorldMovingNPC3.frameSprite.getY, 1, 1)
+		batch.draw(topWorldMovingNPC4.currentFrame, topWorldMovingNPC4.frameSprite.getX, topWorldMovingNPC4.frameSprite.getY, 1, 1)
 	}
 
 }
@@ -52,4 +41,3 @@ class TopWorldNPCs extends MapNPCs {
 object TopWorldNPCs{
 	def apply():TopWorldNPCs = new TopWorldNPCs
 }
-*/

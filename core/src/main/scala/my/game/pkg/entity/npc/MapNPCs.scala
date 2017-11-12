@@ -1,14 +1,12 @@
-/*package my.game.pkg.entity.utils
+package my.game.pkg.entity.npc
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import my.game.pkg.map.MapManager
 
-//base class for different map NPCs class
 abstract class MapNPCs {
-	def initNPCs()
-	def updateNPCs(delta : Float)
-	def moveNPCs()
-	def drawNPCs(batch : Batch)
+	def init()
+	def update(delta : Float)
+	def draw(batch : Batch)
 }
 
 object MapNPCs{
@@ -21,4 +19,3 @@ object MapNPCs{
 		return new TownNPCs
 	}
 }
-*/

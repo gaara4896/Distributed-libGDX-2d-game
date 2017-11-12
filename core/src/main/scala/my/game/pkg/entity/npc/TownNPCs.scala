@@ -1,62 +1,38 @@
-/*package my.game.pkg.entity.utils
+package my.game.pkg.entity.npc
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import my.game.pkg.entity.{MovingNPC, NPC, PlayerEntity}
-import my.game.pkg.map.MapManager
 
-//NPCs for Town
+import my.game.pkg.entity.{MovingNPC, NPC, Entity}
+import my.game.pkg.entity.utils.Direction
+
 class TownNPCs extends MapNPCs {
 
-	//record boolean value for one time update and move for non-moving NPC
 	var firstMove = true
 	var firstUpdate = true
 
-	//NPCs for TOWN map
-	val townMovingNPC1 = MovingNPC(PlayerEntity.spritePatchRogue, MapManager.TOWN, 17, 9, 20, 15)
-	val townMovingNPC2 = MovingNPC(PlayerEntity.spritePatchEngineer, MapManager.TOWN, 10.8568f, 9.8568f, 8.5119f, 3.3652f)
-	val townNPC1 = NPC(PlayerEntity.spritePatchWarrior, MapManager.TOWN, 11.6835f, 23.3770f, Direction.DOWN)
-	val townNPC2 = NPC(PlayerEntity.spritePatchPaladin, MapManager.TOWN, 4.0811f, 26.3357f, Direction.DOWN)
+	val townMovingNPC1 = MovingNPC(Entity.spritePatchRogue, 11, 3)
+	val townMovingNPC2 = MovingNPC(Entity.spritePatchEngineer, 1f, 5.1467f)
+	val townNPC1 = NPC(Entity.spritePatchWarrior, Direction.DOWN)
+	val townNPC2 = NPC(Entity.spritePatchPaladin, Direction.DOWN)
 
-	def initNPCs(): Unit ={
-		townMovingNPC1.init(new Vector2(townMovingNPC1.positionX, townMovingNPC1.positionY))
-		townMovingNPC2.init(new Vector2(townMovingNPC2.positionX, townMovingNPC2.positionY))
-		townNPC1.init(new Vector2(townNPC1.positionX, townNPC1.positionY))
-		townNPC2.init(new Vector2(townNPC2.positionX, townNPC2.positionY))
+	def init(){
+		townMovingNPC1.init(new Vector2(8, 20))
+		townMovingNPC2.init(new Vector2(9.7f, 8f))
+		townNPC1.init(new Vector2(11.6835f, 23.3770f))
+		townNPC2.init(new Vector2(4.0811f, 26.3357f))
 	}
 
-	def updateMovingNPCs(delta:Float): Unit ={
+	def update(delta:Float){
 		townMovingNPC1.update(delta)
 		townMovingNPC2.update(delta)
-		if(firstUpdate) {
-			firstUpdate = false
-			townNPC1.update(delta, State.IDLE)
-			townNPC2.update(delta, State.IDLE)
-		}
 	}
 
-	def moveNPCs(): Unit ={
-		townMovingNPC1.move()
-		townMovingNPC2.move()
-		if(firstMove) {
-			firstMove = false
-			townNPC1.move()
-			townNPC2.move()
-		}
-	}
-
-	def drawNPCs(batch: Batch): Unit ={
-		batch.draw(townMovingNPC1.currentFrame, townMovingNPC1.frameSprite.getX, townMovingNPC1.frameSprite.getY, 1,1)
-		batch.draw(townMovingNPC2.currentFrame, townMovingNPC2.frameSprite.getX, townMovingNPC2.frameSprite.getY, 1,1)
-		batch.draw(townNPC1.currentFrame, townNPC1.frameSprite.getX, townNPC1.frameSprite.getY, 1,1)
-		batch.draw(townNPC2.currentFrame, townNPC2.frameSprite.getX, townNPC2.frameSprite.getY, 1,1)
-	}
-
-	def disposeNPCs(): Unit ={
-		townMovingNPC1.dispose()
-		townMovingNPC2.dispose()
-		townNPC1.dispose()
-		townNPC2.dispose()
+	def draw(batch: Batch): Unit ={
+		batch.draw(townMovingNPC1.currentFrame, townMovingNPC1.frameSprite.getX, townMovingNPC1.frameSprite.getY, 1, 1)
+		batch.draw(townMovingNPC2.currentFrame, townMovingNPC2.frameSprite.getX, townMovingNPC2.frameSprite.getY, 1, 1)
+		batch.draw(townNPC1.currentFrame, townNPC1.frameSprite.getX, townNPC1.frameSprite.getY, 1, 1)
+		batch.draw(townNPC2.currentFrame, townNPC2.frameSprite.getX, townNPC2.frameSprite.getY, 1, 1)
 	}
 
   }
@@ -64,4 +40,3 @@ class TownNPCs extends MapNPCs {
 object TownNPCs{
 	def apply():TownNPCs = new TownNPCs
 }
-*/
