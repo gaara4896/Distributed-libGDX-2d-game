@@ -3,12 +3,10 @@ package my.game.pkg.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.{GL20, OrthographicCamera}
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.g2d.{BitmapFont, Sprite, SpriteBatch, TextureRegion}
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
-
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
@@ -21,10 +19,10 @@ import scala.collection.mutable.ListBuffer
 
 class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
-	val controller = PlayerController(MainGameScreen.player, game)
+	//var controller : PlayerController
 	var currentPlayerFrame:TextureRegion = null
-	var currentPlayerSprite = MainGameScreen.player.frameSprite
-	val mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
+	var currentPlayerSprite : Sprite = null
+	var mapRenderer = new OrthogonalTiledMapRenderer(MainGameScreen.mapMgr.getCurrentMap(), MapManager.UNIT_SCALE)
 	val camera = new OrthographicCamera()
 	val font = new BitmapFont()
 	val spriteBatch = new SpriteBatch()
@@ -33,6 +31,11 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	 * Execute when no screen is showed
 	 */
 	override def show{
+
+		MainGameScreen.player = Player(MainGameScreen.patch)
+		MainGameScreen.controller = PlayerController(MainGameScreen.player, game)
+		currentPlayerSprite = MainGameScreen.player.frameSprite
+
 		MainGameScreen.VIEWPORT.setupViewport(15, 15, Gdx.graphics.getWidth(), Gdx.graphics.getHeight())
 
 		camera.setToOrtho(false, MainGameScreen.VIEWPORT.viewportWidth, MainGameScreen.VIEWPORT.viewportHeight)
@@ -43,7 +46,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 		MainGameScreen.player.move()
 		MainGameScreen.npc.init()
-		Gdx.input.setInputProcessor(controller)
+		Gdx.input.setInputProcessor(MainGameScreen.controller)
 	}
 
 	/**
@@ -59,7 +62,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1)
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-		controller.update(delta)
+		MainGameScreen.controller.update(delta)
 		MainGameScreen.npc.update(delta)
 		currentPlayerFrame = MainGameScreen.player.currentFrame
 
@@ -122,7 +125,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	 */
 	override def dispose{
 		MainGameScreen.player.dispose()
-		controller.dispose()
+		MainGameScreen.controller.dispose()
 		Gdx.input.setInputProcessor(null)
 		mapRenderer.dispose()
 		font.dispose()
@@ -181,7 +184,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
 					game.client match{
-						case Some(x) => x.changeMap(MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName, 
+						case Some(x) => x.changeMap(MainGameScreen.player.patch, MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName,
 							MainGameScreen.player.position.x, MainGameScreen.player.position.y)
 						case None => 
 					}
@@ -209,7 +212,9 @@ object MainGameScreen {
 	var mapMgr:MapManager = MapManager()
 
 	var npc = MapNPCs(MapManager.TOWN)
-	val player = Player()
+	var patch:Int = 0
+	var controller : PlayerController = null
+	var player : Player = null
 	val remotePlayers = new ListBuffer[RemotePlayer]()
 
 	private object VIEWPORT{

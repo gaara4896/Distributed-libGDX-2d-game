@@ -17,7 +17,7 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	val table = new Table()
 
 	val ipLabel = new Label("IP Address:", AssetsManager.STATUSUI_SKIN)
-	val ipTextField = new TextField("127.0.0.1", AssetsManager.STATUSUI_SKIN)
+	val ipTextField = new TextField("210.186.240.171", AssetsManager.STATUSUI_SKIN)
 	val portLabel = new Label("Port:", AssetsManager.STATUSUI_SKIN)
 	val portTextField = new TextField("8080", AssetsManager.STATUSUI_SKIN)
 	val connectButton = new TextButton("Connect", AssetsManager.STATUSUI_SKIN)

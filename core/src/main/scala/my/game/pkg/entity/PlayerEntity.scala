@@ -10,15 +10,54 @@ import my.game.pkg.assets.AssetsManager
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.map.MapManager
 
-abstract class PlayerEntity extends Entity{
+abstract class PlayerEntity(val patch:Int) extends Entity{
 
 	val velocity = new Vector2(10f, 10f)
 	var previousDirection = Direction.UP
 	val nextPosition = new Vector2()
 	val boundingBox = new Rectangle()
-	var currentFrame:TextureRegion = PlayerEntity.walkDownFrames.get(0)
+
+	val defaultSpritePatch:String = setupPatch(patch)
+
+	AssetsManager.loadTextureAsset(defaultSpritePatch)
+	val texture:Option[Texture] = AssetsManager.getTextureAsset(defaultSpritePatch)
+	val walkDownFrames = new Array[TextureRegion](4)
+	val walkLeftFrames = new Array[TextureRegion](4)
+	val walkRightFrames = new Array[TextureRegion](4)
+	val walkUpFrames = new Array[TextureRegion](4)
+	texture match{
+		case Some(tex) =>
+			for(x <- 0 to 3; val textureFrames:scala.Array[scala.Array[TextureRegion]] = TextureRegion.split(tex, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)){
+				for(y <- 0 to 3){
+					x match{
+						case 0 => walkDownFrames.insert(y, textureFrames(x)(y))
+						case 1 => walkLeftFrames.insert(y, textureFrames(x)(y))
+						case 2 => walkRightFrames.insert(y, textureFrames(x)(y))
+						case 3 => walkUpFrames.insert(y, textureFrames(x)(y))
+					}
+				}
+			}
+		case None =>
+	}
+	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
+	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
+	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
+	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
+
+	var currentFrame:TextureRegion = walkDownFrames.get(0)
 	val frameSprite = new Sprite(currentFrame.getTexture(), 0, 0, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)
-	
+
+	//set player's patch according to patch:Int
+	def setupPatch(patch:Int): String ={
+		patch match{
+				case 0 => return Entity.spritePatchWarrior
+				case 1 => return Entity.spritePatchRogue
+				case 2 => return Entity.spritePatchMage
+				case 3 => return Entity.spritePatchPaladin
+				case 4 => return Entity.spritePatchEngineer
+		}
+	}
+
 	/**
 	 * Set bounding box size for the player
 	 * @param widthReduce:Float  Width reduced in percentage
@@ -53,30 +92,4 @@ object PlayerEntity{
 
 	private val TAG:String = PlayerEntity.getClass().getSimpleName()
 
-	val defaultSpritePatch:String = Entity.spritePatchWarrior
-
-	AssetsManager.loadTextureAsset(PlayerEntity.defaultSpritePatch)
-	val texture:Option[Texture] = AssetsManager.getTextureAsset(PlayerEntity.defaultSpritePatch)
-	val walkDownFrames = new Array[TextureRegion](4)
-	val walkLeftFrames = new Array[TextureRegion](4)
-	val walkRightFrames = new Array[TextureRegion](4)
-	val walkUpFrames = new Array[TextureRegion](4)
-	texture match{
-		case Some(tex) =>
-			for(x <- 0 to 3; val textureFrames:scala.Array[scala.Array[TextureRegion]] = TextureRegion.split(tex, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)){
-				for(y <- 0 to 3){
-					x match{
-						case 0 => walkDownFrames.insert(y, textureFrames(x)(y))
-						case 1 => walkLeftFrames.insert(y, textureFrames(x)(y))
-						case 2 => walkRightFrames.insert(y, textureFrames(x)(y))
-						case 3 => walkUpFrames.insert(y, textureFrames(x)(y))
-					}
-				}
-			}
-		case None => 
-	}
-	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
-	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
-	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
-	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
 }

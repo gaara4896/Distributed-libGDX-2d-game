@@ -10,7 +10,7 @@ import my.game.pkg.entity.utils.State
 import my.game.pkg.entity.utils.State._
 import my.game.pkg.assets.AssetsManager
 
-class Player extends PlayerEntity {
+class Player(patch:Int) extends PlayerEntity(patch) {
 	
 
 	/**
@@ -32,26 +32,26 @@ class Player extends PlayerEntity {
 				case Direction.LEFT =>
 					nextPosition.x = position.x - velocity.x
 					nextPosition.y = position.y
-					currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
+					currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
 				case Direction.RIGHT =>
 					nextPosition.x = position.x + velocity.x
 					nextPosition.y = position.y
-					currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
+					currentFrame = walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
 					nextPosition.y = position.y + velocity.y
 					nextPosition.x = position.x
-					currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
+					currentFrame = walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
 					nextPosition.y = position.y - velocity.y
 					nextPosition.x = position.x
-					currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
+					currentFrame = walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
 		}
 		velocity.scl(1 / delta)
 		setBoundingSize(0f, 0.5f)
 		game.client match{
-			case Some(x) => x.update(delta, MainGameScreen.mapMgr.currentMapName, position.x, position.y, currentDirection, currentState:State, frameTime)
+			case Some(x) => x.update(delta, patch, MainGameScreen.mapMgr.currentMapName, position.x, position.y, currentDirection, currentState:State, frameTime)
 			case None => 
 		}
 	}
@@ -86,7 +86,7 @@ class Player extends PlayerEntity {
 	 * Dispose of asset when not needed
 	 */
 	def dispose(){
-		AssetsManager.unloadAsset(PlayerEntity.defaultSpritePatch)
+		AssetsManager.unloadAsset(defaultSpritePatch)
 	}
 }
 
@@ -96,7 +96,7 @@ object Player{
 		* Apply method for creating Player
 		* @return Player New instance of Player
 		*/
-	def apply():Player = new Player()
+	def apply(patch:Int):Player = new Player(patch)
 
 	private val TAG:String = Player.getClass().getSimpleName()
 }
