@@ -11,16 +11,16 @@ class MovingNPC (spritePatch:String, mapName:String, val Xmax:Float, val Xmin:Fl
 
 	//moving the NPC in square according to given coordinates
 	override def update(delta:Float, currentState:State){
-		if(currentPlayerPosition.x >= Xmax-0.5 && currentPlayerPosition.x <= Xmax+0.5 && currentDirection == Direction.RIGHT){
+		if(position.x >= Xmax-0.5 && position.x <= Xmax+0.5 && currentDirection == Direction.RIGHT){
 		  directionToGo = Direction.DOWN
 		}
-		else if(currentPlayerPosition.x >= Xmin-0.5 && currentPlayerPosition.x <= Xmin+0.5 && currentDirection == Direction.LEFT){
+		else if(position.x >= Xmin-0.5 && position.x <= Xmin+0.5 && currentDirection == Direction.LEFT){
 		  directionToGo = Direction.UP
 		}
-		else if(currentPlayerPosition.y >= Ymax-0.5 && currentPlayerPosition.y <= Ymax+0.5 && currentDirection == Direction.UP){
+		else if(position.y >= Ymax-0.5 && position.y <= Ymax+0.5 && currentDirection == Direction.UP){
 		  directionToGo = Direction.RIGHT
 		}
-		else if(currentPlayerPosition.y >= Ymin-0.5 && currentPlayerPosition.y <= Ymin+0.5 && currentDirection == Direction.DOWN){
+		else if(position.y >= Ymin-0.5 && position.y <= Ymin+0.5 && currentDirection == Direction.DOWN){
 		  directionToGo = Direction.LEFT
 		}
 		else{

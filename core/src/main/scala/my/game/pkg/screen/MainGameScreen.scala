@@ -175,7 +175,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
 					//MainGameScreen.NPCs.disposeNPCs()
 
-					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.currentPlayerPosition)
+					MainGameScreen.mapMgr.setClosestStartPositionFromScaledUnits(MainGameScreen.player.position)
 					MainGameScreen.mapMgr.loadMap(mapName)
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 
@@ -185,7 +185,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
 					game.client match{
 						case Some(x) => x.changeMap(MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName, 
-							MainGameScreen.player.currentPlayerPosition.x, MainGameScreen.player.currentPlayerPosition.y)
+							MainGameScreen.player.position.x, MainGameScreen.player.position.y)
 						case None => 
 					}
 					MainGameScreen.remotePlayers.clear

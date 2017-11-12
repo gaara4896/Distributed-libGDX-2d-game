@@ -9,5 +9,5 @@ object ServerDictionary{
 	case class PlayerStandStill(uuid:String, x:Float, y:Float)
 	case class KillPlayer(uuid:String)
 	case class NotAlive(uuid:String, map:String)
-	case class Correction(uuid:String, x:Float, y:Float, direction:Direction, state:State)
+	case class Correction(uuid:String, x:Float, y:Float, direction:Direction, state:State, frameTime:Float)
 }

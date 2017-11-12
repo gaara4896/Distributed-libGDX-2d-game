@@ -30,20 +30,20 @@ class Player extends PlayerEntity {
 		if(currentState != State.IDLE){
 			currentDirection match{
 				case Direction.LEFT =>
-					nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
-					nextPlayerPosition.y = currentPlayerPosition.y
+					nextPosition.x = position.x - velocity.x
+					nextPosition.y = position.y
 					currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
 				case Direction.RIGHT =>
-					nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
-					nextPlayerPosition.y = currentPlayerPosition.y
+					nextPosition.x = position.x + velocity.x
+					nextPosition.y = position.y
 					currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
-					nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
-					nextPlayerPosition.x = currentPlayerPosition.x
+					nextPosition.y = position.y + velocity.y
+					nextPosition.x = position.x
 					currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
-					nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
-					nextPlayerPosition.x = currentPlayerPosition.x
+					nextPosition.y = position.y - velocity.y
+					nextPosition.x = position.x
 					currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
@@ -51,7 +51,7 @@ class Player extends PlayerEntity {
 		velocity.scl(1 / delta)
 		setBoundingSize(0f, 0.5f)
 		game.client match{
-			case Some(x) => x.update(delta, MainGameScreen.mapMgr.currentMapName, currentPlayerPosition.x, currentPlayerPosition.y, currentDirection, currentState:State)
+			case Some(x) => x.update(delta, MainGameScreen.mapMgr.currentMapName, position.x, position.y, currentDirection, currentState:State, frameTime)
 			case None => 
 		}
 	}
@@ -71,10 +71,10 @@ class Player extends PlayerEntity {
 	 * @param  position:Vector2 Position of the player
 	 */
 	def init(position:Vector2){
-		currentPlayerPosition.x = position.x.toInt
-		currentPlayerPosition.y = position.y.toInt
-		nextPlayerPosition.x = position.x.toInt
-		nextPlayerPosition.y = position.y.toInt
+		position.x = position.x.toInt
+		position.y = position.y.toInt
+		nextPosition.x = position.x.toInt
+		nextPosition.y = position.y.toInt
 	}
 
 	/**

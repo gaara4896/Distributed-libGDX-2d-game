@@ -6,10 +6,9 @@ import my.game.pkg.map.MapManager
 //base class for different map NPCs class
 abstract class MapNPCs {
 	def initNPCs()
-	def updateMovingNPCs(delta : Float)
+	def updateNPCs(delta : Float)
 	def moveNPCs()
 	def drawNPCs(batch : Batch)
-	def disposeNPCs()
 }
 
 object MapNPCs{

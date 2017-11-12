@@ -82,7 +82,7 @@ class PlayerController(val player:Player, val game:Distributedlibgdx2dgame) exte
 					game.client.foreach{client => client.move(Direction.DOWN)}
 				}
 			} else{
-				game.client.foreach{client => client.standStill(MainGameScreen.player.currentPlayerPosition.x, MainGameScreen.player.currentPlayerPosition.y)}
+				game.client.foreach{client => client.standStill(MainGameScreen.player.position.x, MainGameScreen.player.position.y)}
 			}
 		}
 		true

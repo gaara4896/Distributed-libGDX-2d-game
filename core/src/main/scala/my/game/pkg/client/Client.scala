@@ -58,10 +58,10 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		 * @param  direction:Direction Direction of the player
 		 * @param  state:State         State of the player
 		 */
-		def update(delta:Float, map:String, x:Float, y:Float, direction:Direction, state:State){
+		def update(delta:Float, map:String, x:Float, y:Float, direction:Direction, state:State, frameTime:Float){
 			timeToPing -= delta
 			if(timeToPing <= 0){
-				game.gameUUID.foreach{uuid => clientActor ! Alive(uuid, map, x, y, direction, state)}
+				game.gameUUID.foreach{uuid => clientActor ! Alive(uuid, map, x, y, direction, state, frameTime)}
 				timeToPing = 1.4f
 			}
 		}

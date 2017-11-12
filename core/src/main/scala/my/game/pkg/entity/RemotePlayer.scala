@@ -7,8 +7,8 @@ import my.game.pkg.entity.utils.State._
 
 class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 
-	currentPlayerPosition.x = x
-	currentPlayerPosition.y = y
+	position.x = x
+	position.y = y
 
 	/**
 	 * Update the player to latest status
@@ -21,20 +21,20 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 		if(state != State.IDLE){
 			currentDirection match{
 				case Direction.LEFT =>
-					nextPlayerPosition.x = currentPlayerPosition.x - velocity.x
-					nextPlayerPosition.y = currentPlayerPosition.y
+					nextPosition.x = position.x - velocity.x
+					nextPosition.y = position.y
 					currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
 				case Direction.RIGHT =>
-					nextPlayerPosition.x = currentPlayerPosition.x + velocity.x
-					nextPlayerPosition.y = currentPlayerPosition.y
+					nextPosition.x = position.x + velocity.x
+					nextPosition.y = position.y
 					currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
-					nextPlayerPosition.y = currentPlayerPosition.y + velocity.y
-					nextPlayerPosition.x = currentPlayerPosition.x
+					nextPosition.y = position.y + velocity.y
+					nextPosition.x = position.x
 					currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
-					nextPlayerPosition.y = currentPlayerPosition.y - velocity.y
-					nextPlayerPosition.x = currentPlayerPosition.x
+					nextPosition.y = position.y - velocity.y
+					nextPosition.x = position.x
 					currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
@@ -59,8 +59,8 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 	 */
 	def setStandStill(x:Float, y:Float){
 		state = State.IDLE
-		currentPlayerPosition.x = x
-		currentPlayerPosition.y = y
+		position.x = x
+		position.y = y
 	}
 
 	/**
@@ -70,13 +70,14 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 	 * @param  direction:Direction Direction of remote player
 	 * @param  playerState:State   State of the remote player
 	 */
-	def correction(x:Float, y:Float, direction:Direction, playerState:State){
-		currentPlayerPosition.x = x
-		currentPlayerPosition.y = y
+	def correction(x:Float, y:Float, direction:Direction, playerState:State, frame:Float){
+		position.x = x
+		position.y = y
 		frameSprite.setX(x)
 		frameSprite.setY(y)
 		currentDirection = direction
 		state = playerState
+		frameTime = frame
 	}
 }
 
