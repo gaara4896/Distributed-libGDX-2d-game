@@ -24,6 +24,10 @@ class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends
 	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
 	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
 
+	/**
+	 * Update NPC status
+	 * @param  delta:Float Delta time of the frame
+	 */
 	def update(delta:Float){
 		state match{
 			case State.IDLE => 
@@ -74,9 +78,13 @@ class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends
 }
 
 object MovingNPC{
+
 	/**
-	  * Apply method for creating NPC
-	  * @return NPC New instance of NPC
+	  * Apply method for creating MovingNPC
+	  * @param  spritePatch:String Sprite patch of the NPC
+	  * @param  rangeX:Float       Range in X of the NPC will move
+	  * @param  rangeY:Float       Range in Y of the NPC will move
+	  * @return MovingNPC          New instance of MovingNPC
 	  */
 	def apply(spritePatch:String, rangeX:Float, rangeY:Float):MovingNPC = new MovingNPC(spritePatch, rangeX, rangeY)
 

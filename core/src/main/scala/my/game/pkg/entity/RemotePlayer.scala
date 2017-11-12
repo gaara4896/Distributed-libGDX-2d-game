@@ -69,6 +69,7 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 	 * @param  y:Float             Y position of remote player
 	 * @param  direction:Direction Direction of remote player
 	 * @param  playerState:State   State of the remote player
+	 * @param  frame:Float         Time of the frame
 	 */
 	def correction(x:Float, y:Float, direction:Direction, playerState:State, frame:Float){
 		position.x = x
@@ -87,6 +88,7 @@ object RemotePlayer{
 	 * @param  uuid:String         UUID of the player  
 	 * @param  x:Float             Y position of the player
 	 * @param  y:Float             X position of the player
+	 * @return RemotePlayer        New instance of RemotePlayer
 	 */
 	def apply(uuid:String, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, x, y)
 

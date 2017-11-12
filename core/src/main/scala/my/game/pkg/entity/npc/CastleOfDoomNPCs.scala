@@ -16,6 +16,9 @@ class CastleOfDoomNPCs extends MapNPCs {
 	val castleNPC6 = NPC(Entity.spritePatchWarrior, Direction.LEFT)
 	val castleNPC7 = NPC(Entity.spritePatchRogue, Direction.RIGHT)
 
+	/**
+	 * Initialize NPCs position
+	 */
 	def init(){
 		castleNPC1.init(new Vector2(7.2145f, 4.0440f))
 		castleNPC2.init(new Vector2(24.0559f, 4.0440f))
@@ -24,12 +27,19 @@ class CastleOfDoomNPCs extends MapNPCs {
 		castleNPC5.init(new Vector2(7.2145f, 16.0407f))
 		castleNPC6.init(new Vector2(24.0559f, 16.0407f))
 		castleNPC7.init(new Vector2(2.5f, 75.5f))
-
 	}
 
+	/**
+	 * Update NPCs 
+	 * @param delta:Float Delta time of the frame
+	 */
 	def update(delta:Float){ }
 
-	def draw(batch: Batch){
+	/**
+	 * Draw NPCs to the screen
+	 * @param batch:Batch Batch of the screen
+	 */
+	def draw(batch:Batch){
 		batch.draw(castleNPC1.currentFrame, castleNPC1.frameSprite.getX, castleNPC1.frameSprite.getY, 1, 1)
 		batch.draw(castleNPC2.currentFrame, castleNPC2.frameSprite.getX, castleNPC2.frameSprite.getY, 1, 1)
 		batch.draw(castleNPC3.currentFrame, castleNPC3.frameSprite.getX, castleNPC3.frameSprite.getY, 1, 1)
@@ -42,5 +52,10 @@ class CastleOfDoomNPCs extends MapNPCs {
 }
 
 object CastleOfDoomNPCs{
+
+	/**
+	 * Apply method for creating CastleOfDoomNPCs
+	 * @return CastlrOfDoomNPCs New instance of CastleOfDoomNPCs
+	 */
 	def apply():CastleOfDoomNPCs = new CastleOfDoomNPCs
 }

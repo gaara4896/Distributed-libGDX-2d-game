@@ -9,7 +9,6 @@ import my.game.pkg.assets.AssetsManager
 import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 
-//positionX and position Y are for the coordinate of the NPC
 class NPC (spritePatch:String, direction:Direction) extends Entity{
 
 	currentDirection = direction
@@ -40,6 +39,10 @@ class NPC (spritePatch:String, direction:Direction) extends Entity{
 		else walkDownFrames.get(0)
 	val frameSprite:Sprite = new Sprite(currentFrame.getTexture(), 0, 0, Entity.FRAME_WIDTH, Entity.FRAME_HEIGHT)
 
+    /**
+     * Initialize NPC position
+     * @param  initPosition:Vector2 Position of NPC to be initialize
+     */
     def init(initPosition:Vector2){
     	position.x = initPosition.x
     	position.y = initPosition.y
