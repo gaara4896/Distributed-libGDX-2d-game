@@ -121,6 +121,9 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		if(connected){
 			statusLabel.setText("Connected")
 			playButton.setText("Play Online")
+		} else {
+			statusLabel.setText("Not Connected")
+			playButton.setText("Play Offline")
 		}
 	}
 

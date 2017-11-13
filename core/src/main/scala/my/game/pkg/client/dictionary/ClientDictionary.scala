@@ -6,6 +6,7 @@ import my.game.pkg.entity.utils.Job._
 
 object ClientDictionary{
 	case object Connect
+	case object Disconnected
 	case class Quit(uuid:String)
 	case class Move(uuid:String, map:String, direction:Direction)
 	case class StandStill(uuid:String, job:Job, map:String, x:Float, y:Float)

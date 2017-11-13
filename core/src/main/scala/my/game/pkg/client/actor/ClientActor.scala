@@ -35,6 +35,7 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case Quit(uuid) => 
 			remoteConnection ! Quit(uuid)
 			println("I Quit")
+		case Disconnected => context.unbecome()
 		case Move(uuid, map, direction) => 
 			remoteGameServer ! Move(uuid, map, direction)
 			println("I move")
@@ -46,7 +47,7 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case Alive(uuid, job, map, x, y, direction, state, frameTime) => 
 			remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
 			println("I alive")
-		
+		case Ping => MainGameScreen.pingFromServer = 3f
 		case PlayerMove(uuid, direction) => 
 			if(!uuid.equals(game.gameUUID)){
 				breakable{

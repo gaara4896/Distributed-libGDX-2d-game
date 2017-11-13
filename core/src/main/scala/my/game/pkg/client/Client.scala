@@ -66,6 +66,12 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 				game.gameUUID.foreach{uuid => clientActor ! Alive(uuid, job, map, x, y, direction, state, frameTime)}
 				timeToPing = 1.4f
 			}
+			MainGameScreen.pingFromServer -= delta
+			if(MainGameScreen.pingFromServer <= 0){
+				game.connectServerScreen.updateConnection(false)
+				game.setScreen(game.connectServerScreen)
+				clientActor ! Disconnected
+			}
 		}
 
 		clientActor ! Connect

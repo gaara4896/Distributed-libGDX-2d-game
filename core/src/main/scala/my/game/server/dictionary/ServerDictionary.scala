@@ -5,6 +5,7 @@ import my.game.pkg.entity.utils.State._
 import my.game.pkg.entity.utils.Job._
 
 object ServerDictionary{
+	case object Ping
 	case class Connected(uuid:String, job:Job)
 	case class PlayerMove(uuid:String, direction:Direction)
 	case class PlayerStandStill(uuid:String, job:Job, x:Float, y:Float)

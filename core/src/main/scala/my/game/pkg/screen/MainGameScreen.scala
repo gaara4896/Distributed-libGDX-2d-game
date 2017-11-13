@@ -216,6 +216,7 @@ object MainGameScreen {
 	var controller:PlayerController = null
 	var player:Player = null
 	val remotePlayers = new ListBuffer[RemotePlayer]()
+	var pingFromServer = 3f
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0
