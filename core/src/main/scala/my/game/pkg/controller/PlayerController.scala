@@ -159,7 +159,7 @@ class PlayerController(val player:Player, val game:Distributedlibgdx2dgame) exte
 
 	/**
 	 * Update status of player controller
-	 * @param delta:Float                  Delta value of the time frame
+	 * @param delta:Float Delta value of the time frame
 	 */
 	def update(delta:Float){
 		if(KeyManager.LEFT){

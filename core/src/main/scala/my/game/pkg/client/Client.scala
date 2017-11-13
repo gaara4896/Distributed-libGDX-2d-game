@@ -32,6 +32,7 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 
 		/**
 		 * Update server when standstill
+		 * @param  job:Job Job of the player
 		 * @param  x:Float X position of player
 		 * @param  y:Float Y position of player
 		 */
@@ -41,6 +42,7 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 
 		/**
 		 * Update server when change map
+		 * @param  job:Job        Job of the player
 		 * @param  mapFrom:String Map the player changed from
 		 * @param  mapTo:String   Map the player changed to
 		 * @param  x:Float        X position of player starting point
@@ -53,6 +55,7 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		/**
 		 * Update server player still alive
 		 * @param  delta:Float         Delta time of the frame
+		 * @param  job:Job             Job of the player
 		 * @param  map:String          Name of the map
 		 * @param  x:Float             X position of the player
 		 * @param  y:Float             Y position of the player

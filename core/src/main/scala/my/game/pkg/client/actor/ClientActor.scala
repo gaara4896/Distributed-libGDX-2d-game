@@ -32,22 +32,14 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 	 * @return Receive Message received
 	 */
 	def connected:Receive = {
-		case Quit(uuid) => 
-			remoteConnection ! Quit(uuid)
-			println("I Quit")
+		case Quit(uuid) => remoteConnection ! Quit(uuid)
 		case Disconnected => context.unbecome()
-		case Move(uuid, map, direction) => 
-			remoteGameServer ! Move(uuid, map, direction)
-			println("I move")
-		case StandStill(uuid, job, map, x, y) => 
-			remoteGameServer ! StandStill(uuid, job, map, x, y)
-			println("I stand still")
+		case Move(uuid, map, direction) => remoteGameServer ! Move(uuid, map, direction)
+		case StandStill(uuid, job, map, x, y) => remoteGameServer ! StandStill(uuid, job, map, x, y)
 		case ChangeMap(uuid, job, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, job, mapFrom, mapTo, x, y)
-			println("I change map")
-		case Alive(uuid, job, map, x, y, direction, state, frameTime) => 
-			remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
-			println("I alive")
+		case Alive(uuid, job, map, x, y, direction, state, frameTime) => remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
 		case Ping => MainGameScreen.pingFromServer = 3f
+
 		case PlayerMove(uuid, direction) => 
 			if(!uuid.equals(game.gameUUID)){
 				breakable{
@@ -58,11 +50,9 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 						}
 					}
 				}
-				println("Move")
 			}
 
 		case PlayerStandStill(uuid, job, x, y) =>
-			println(job)
 			if(!uuid.equals(game.gameUUID)){
 				var exist:Boolean = false
 				breakable{
@@ -77,11 +67,9 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 				if(!exist){
 					MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
 				}
-				println("StandStill")
 			}
 		
 		case Correction(uuid, job, x, y, direction, playerState, frameTime) =>
-			println(job)
 			var exist:Boolean = false
 			breakable{
 				for(remotePlayer <- MainGameScreen.remotePlayers){
@@ -95,7 +83,6 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 			if(!exist){
 				MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
 			}
-			println("Correction")
 		
 		case KillPlayer(uuid) => breakable{
 				for(remotePlayer <- MainGameScreen.remotePlayers){
@@ -104,7 +91,6 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 					}
 				}
 			}
-			println("KillPlayer")
 	}
 }
 

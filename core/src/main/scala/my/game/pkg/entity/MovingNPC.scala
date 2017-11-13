@@ -9,7 +9,6 @@ import my.game.pkg.entity.utils.Job._
 import scala.collection.mutable.Queue
 import scala.util.Random
 
-//Xmax, Xmin, Ymax and Ymin provides the coordinate for the square movement of the NPC
 class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, Direction.RIGHT){
 
 	val velocity = new Vector2(3f, 3f)
@@ -73,7 +72,7 @@ object MovingNPC{
 
 	/**
 	  * Apply method for creating MovingNPC
-	  * @param  spritePatch:String Sprite patch of the NPC
+	  * @param  job:Job            Job of the NPC
 	  * @param  rangeX:Float       Range in X of the NPC will move
 	  * @param  rangeY:Float       Range in Y of the NPC will move
 	  * @return MovingNPC          New instance of MovingNPC

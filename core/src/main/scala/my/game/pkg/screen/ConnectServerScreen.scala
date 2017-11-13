@@ -117,6 +117,10 @@ class ConnectServerScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		stage.dispose()
 	}
 
+	/**
+	 * Update Connection Status
+	 * @param  connected:Boolean True if connected to server
+	 */
 	def updateConnection(connected:Boolean){
 		if(connected){
 			statusLabel.setText("Connected")

@@ -85,7 +85,8 @@ object Player{
 
 	/**
 		* Apply method for creating Player
-		* @return Player New instance of Player
+		* @param  job:Job Job of the Player
+		* @return Player  New instance of Player
 		*/
 	def apply(job:Job):Player = new Player(job)
 

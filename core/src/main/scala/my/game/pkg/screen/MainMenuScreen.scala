@@ -63,9 +63,7 @@ class MainMenuScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					true
 				}
 
-				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
-					//game.setScreen(game.connectServerScreen)
-				}
+				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {}
 			}
 		)
 

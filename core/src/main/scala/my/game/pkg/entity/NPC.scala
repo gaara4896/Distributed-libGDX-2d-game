@@ -29,7 +29,9 @@ class NPC (job:Job, direction:Direction) extends Entity(job){
 object NPC{
 	/**
 	 * Apply method for creating NPC
-	 * @return NPC New instance of NPC
+	 * @param  job:Job             Job of the NPC
+	 * @param  direction:Direction Direction of the NPC
+	 * @return NPC                 New instance of NPC
 	 */
 	def apply(job:Job, direction:Direction):NPC = new NPC(job, direction)
 

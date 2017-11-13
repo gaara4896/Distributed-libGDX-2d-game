@@ -46,6 +46,11 @@ object EntitySprite{
 	private val spriteFileName:Map[Job, String] = Map(Job.WARRIOR -> "Warrior.png", Job.ROGUE -> "Rogue.png", 
 		Job.ENGINEER -> "Engineer.png", Job.PALADIN -> "Paladin.png", Job.MAGE -> "Mage.png")
 
+	/**
+	 * Apply method for creating EntitySprite
+	 * @param  job:Job      Job for the sprite to create
+	 * @return EntitySprite Instance of EntitySprite
+	 */
 	private def apply(job:Job):EntitySprite = {
 		var spritePatch = entitySpritePatch.get(job)
 		spritePatch match{
@@ -57,6 +62,12 @@ object EntitySprite{
 		spritePatch.get
 	}
 
+	/**
+	 * Get the first frame of texture
+	 * @param  job:Job             Job of the sprite
+	 * @param  direction:Direction Direction of the sprite
+	 * @return TextureRegion       TextureRegion of the frame
+	 */
 	def getFirstTexture(job:Job, direction:Direction):TextureRegion = {
 		val spritePatch = EntitySprite(job)
 		var firstFrame:Option[TextureRegion] = None
@@ -69,6 +80,12 @@ object EntitySprite{
 		firstFrame.get
 	}
 
+	/**
+	 * Get animation for specific job
+	 * @param  job:Job                  Job of the sprite
+	 * @param  direction:Direction      Direction of the sprite
+	 * @return Animation[TextureRegion] Animation for the sprite
+	 */
 	def getAnimation(job:Job, direction:Direction):Animation[TextureRegion] = {
 		val spritePatch = EntitySprite(job)
 		var animation:Option[Animation[TextureRegion]] = None
@@ -81,6 +98,9 @@ object EntitySprite{
 		animation.get
 	}
 
+	/**
+	 * Dispose the asset loaded
+	 */
 	def dispose(){
 		entitySpritePatch.keys.foreach{x =>
 			AssetsManager.unloadAsset(s"sprites/characters/${spriteFileName(x)}")

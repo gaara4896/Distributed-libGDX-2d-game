@@ -84,6 +84,7 @@ object RemotePlayer{
 	/**
 	 * Apply method for creating RemotePlayer
 	 * @param  uuid:String         UUID of the player  
+	 * @param  job:Job             Job of the player
 	 * @param  x:Float             Y position of the player
 	 * @param  y:Float             X position of the player
 	 * @return RemotePlayer        New instance of RemotePlayer
