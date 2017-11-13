@@ -3,7 +3,7 @@ package my.game.pkg.client.actor
 import akka.actor.Actor
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.screen.MainGameScreen
-import my.game.pkg.entity.{Player, RemotePlayer}
+import my.game.pkg.entity.RemotePlayer
 import my.game.pkg.client.dictionary.ClientDictionary._
 import my.game.server.dictionary.ServerDictionary._
 
@@ -19,8 +19,8 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 	 */
 	def receive = {
 		case Connect => remoteConnection ! Connect
-		case Connected(uuid, patch) =>
-			MainGameScreen.patch = patch
+		case Connected(uuid, job) =>
+			MainGameScreen.job = job
 			game.connectServerScreen.updateConnection(true)
 			game.gameUUID = Option(uuid)
 			context.become(connected)
@@ -38,13 +38,13 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case Move(uuid, map, direction) => 
 			remoteGameServer ! Move(uuid, map, direction)
 			println("I move")
-		case StandStill(uuid, patch, map, x, y) => 
-			remoteGameServer ! StandStill(uuid, patch, map, x, y)
+		case StandStill(uuid, job, map, x, y) => 
+			remoteGameServer ! StandStill(uuid, job, map, x, y)
 			println("I stand still")
-		case ChangeMap(uuid, patch, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, patch, mapFrom, mapTo, x, y)
+		case ChangeMap(uuid, job, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, job, mapFrom, mapTo, x, y)
 			println("I change map")
-		case Alive(uuid, patch, map, x, y, direction, state, frameTime) => 
-			remoteGameServer ! Alive(uuid, patch, map, x, y, direction, state, frameTime)
+		case Alive(uuid, job, map, x, y, direction, state, frameTime) => 
+			remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
 			println("I alive")
 		
 		case PlayerMove(uuid, direction) => 
@@ -60,8 +60,8 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 				println("Move")
 			}
 
-		case PlayerStandStill(uuid, patch, x, y) =>
-			println(patch)
+		case PlayerStandStill(uuid, job, x, y) =>
+			println(job)
 			if(!uuid.equals(game.gameUUID)){
 				var exist:Boolean = false
 				breakable{
@@ -74,13 +74,13 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 					}
 				}
 				if(!exist){
-					MainGameScreen.remotePlayers += RemotePlayer(uuid, patch, x, y)
+					MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
 				}
 				println("StandStill")
 			}
 		
-		case Correction(uuid, patch, x, y, direction, playerState, frameTime) =>
-			println(patch)
+		case Correction(uuid, job, x, y, direction, playerState, frameTime) =>
+			println(job)
 			var exist:Boolean = false
 			breakable{
 				for(remotePlayer <- MainGameScreen.remotePlayers){
@@ -92,7 +92,7 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 				}
 			}
 			if(!exist){
-				MainGameScreen.remotePlayers += RemotePlayer(uuid, patch, x, y)
+				MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
 			}
 			println("Correction")
 		

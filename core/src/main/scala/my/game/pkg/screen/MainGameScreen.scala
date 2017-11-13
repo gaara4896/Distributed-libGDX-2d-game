@@ -11,7 +11,7 @@ import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.map.MapManager
 import my.game.pkg.controller.PlayerController
 import my.game.pkg.entity.{Player, RemotePlayer}
-import my.game.pkg.entity.utils.State
+import my.game.pkg.entity.utils.{State, Job}
 import my.game.pkg.entity.npc.MapNPCs
 
 import scala.collection.JavaConverters._
@@ -32,7 +32,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 	 */
 	override def show{
 
-		MainGameScreen.player = Player(MainGameScreen.patch)
+		MainGameScreen.player = Player(MainGameScreen.job)
 		MainGameScreen.controller = PlayerController(MainGameScreen.player, game)
 		currentPlayerSprite = MainGameScreen.player.frameSprite
 
@@ -184,7 +184,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
 					game.client match{
-						case Some(x) => x.changeMap(MainGameScreen.player.patch, MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName,
+						case Some(x) => x.changeMap(MainGameScreen.player.job, MainGameScreen.mapMgr.previousMapName, MainGameScreen.mapMgr.currentMapName,
 							MainGameScreen.player.position.x, MainGameScreen.player.position.y)
 						case None => 
 					}
@@ -212,9 +212,9 @@ object MainGameScreen {
 	var mapMgr:MapManager = MapManager()
 
 	var npc = MapNPCs(MapManager.TOWN)
-	var patch:Int = 0
-	var controller : PlayerController = null
-	var player : Player = null
+	var job= Job.WARRIOR
+	var controller:PlayerController = null
+	var player:Player = null
 	val remotePlayers = new ListBuffer[RemotePlayer]()
 
 	private object VIEWPORT{

@@ -78,6 +78,7 @@ class MainMenuScreen(val game:Distributedlibgdx2dgame) extends Screen{
 				override def touchUp(event:InputEvent, x:Float, y:Float, pointer:Int, button:Int) {
 					game.client match{
 						case Some(x) => x.quit()
+						case None => 
 					}
 					Gdx.app.exit()
 				}

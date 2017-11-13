@@ -4,7 +4,6 @@ import com.badlogic.gdx.{Gdx, Input, InputProcessor}
 import com.badlogic.gdx.math.Vector3
 
 import my.game.pkg.Distributedlibgdx2dgame
-import my.game.pkg.screen.MainGameScreen
 import my.game.pkg.entity.Player
 import my.game.pkg.entity.utils.{Direction, State}
 
@@ -82,7 +81,7 @@ class PlayerController(val player:Player, val game:Distributedlibgdx2dgame) exte
 					game.client.foreach{client => client.move(Direction.DOWN)}
 				}
 			} else{
-				game.client.foreach{client => client.standStill(player.patch, player.position.x, player.position.y)}
+				game.client.foreach{client => client.standStill(player.job, player.position.x, player.position.y)}
 			}
 		}
 		true

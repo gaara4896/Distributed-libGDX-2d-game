@@ -4,8 +4,9 @@ import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
 import my.game.pkg.entity.utils.State._
+import my.game.pkg.entity.utils.Job._
 
-class RemotePlayer(val uuid:String, patch:Int, x:Float, y:Float) extends PlayerEntity(patch) {
+class RemotePlayer(val uuid:String, job:Job, x:Float, y:Float) extends PlayerEntity(job) {
 
 	position.x = x
 	position.y = y
@@ -23,21 +24,18 @@ class RemotePlayer(val uuid:String, patch:Int, x:Float, y:Float) extends PlayerE
 				case Direction.LEFT =>
 					nextPosition.x = position.x - velocity.x
 					nextPosition.y = position.y
-					currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
 				case Direction.RIGHT =>
 					nextPosition.x = position.x + velocity.x
 					nextPosition.y = position.y
-					currentFrame = walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
 					nextPosition.y = position.y + velocity.y
 					nextPosition.x = position.x
-					currentFrame = walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
 					nextPosition.y = position.y - velocity.y
 					nextPosition.x = position.x
-					currentFrame = walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
+			currentFrame = EntitySprite.getAnimation(job, currentDirection).getKeyFrame(frameTime)
 		}
 		velocity.scl(1 / delta)
 		setBoundingSize(0f, 0.5f)
@@ -90,7 +88,7 @@ object RemotePlayer{
 	 * @param  y:Float             X position of the player
 	 * @return RemotePlayer        New instance of RemotePlayer
 	 */
-	def apply(uuid:String, patch:Int, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, patch, x, y)
+	def apply(uuid:String, job:Job, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, job, x, y)
 
 	private val TAG:String = RemotePlayer.getClass().getSimpleName()
 }

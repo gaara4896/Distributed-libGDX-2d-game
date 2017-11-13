@@ -1,16 +1,16 @@
 package my.game.pkg.entity
 
-import com.badlogic.gdx.graphics.g2d.{Animation, TextureRegion}
 import com.badlogic.gdx.math.Vector2
 
 import my.game.pkg.entity.utils.{Direction, State}
 import my.game.pkg.entity.utils.Direction._
+import my.game.pkg.entity.utils.Job._
 
 import scala.collection.mutable.Queue
 import scala.util.Random
 
 //Xmax, Xmin, Ymax and Ymin provides the coordinate for the square movement of the NPC
-class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends NPC(spritePatch, Direction.RIGHT){
+class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, Direction.RIGHT){
 
 	val velocity = new Vector2(3f, 3f)
 	var directionSequence = Queue(Direction.DOWN, Direction.LEFT, Direction.UP)
@@ -18,11 +18,6 @@ class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends
 	var countDownRange:Float = rangeX
 	var restTime:Float = 0
 	state = State.WALKING
-
-	val walkDownAnimation = new Animation[TextureRegion](0.25f, walkDownFrames, Animation.PlayMode.LOOP)
-	val walkLeftAnimation = new Animation[TextureRegion](0.25f, walkLeftFrames, Animation.PlayMode.LOOP)
-	val walkRightAnimation = new Animation[TextureRegion](0.25f, walkRightFrames, Animation.PlayMode.LOOP)
-	val walkUpAnimation = new Animation[TextureRegion](0.25f, walkUpFrames, Animation.PlayMode.LOOP)
 
 	/**
 	 * Update NPC status
@@ -49,25 +44,22 @@ class MovingNPC (spritePatch:String, val rangeX:Float, val rangeY:Float) extends
 					case Direction.LEFT =>
 						position.x -= velocity.x
 						frameSprite.setX(position.x)
-						countDownRange -= velocity.x
-						currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
+						countDownRange -= velocity.x						
 					case Direction.RIGHT =>
 						position.x += velocity.x
 						frameSprite.setX(position.x)
 						countDownRange -= velocity.x
-						currentFrame = walkRightAnimation.getKeyFrame(frameTime)
 					case Direction.UP =>
 						position.y += velocity.y
 						frameSprite.setY(position.y)
 						countDownRange -= velocity.y
-						currentFrame = walkUpAnimation.getKeyFrame(frameTime)
 					case Direction.DOWN =>
 						position.y -= velocity.y
 						frameSprite.setY(position.y)
 						countDownRange -= velocity.y
-						currentFrame = walkDownAnimation.getKeyFrame(frameTime)
 					case _ =>
 				}
+				currentFrame = EntitySprite.getAnimation(job, walkingDirection).getKeyFrame(frameTime)
 				velocity.scl(1 / delta)
 				if(countDownRange <= 0){
 					state = State.IDLE
@@ -86,7 +78,7 @@ object MovingNPC{
 	  * @param  rangeY:Float       Range in Y of the NPC will move
 	  * @return MovingNPC          New instance of MovingNPC
 	  */
-	def apply(spritePatch:String, rangeX:Float, rangeY:Float):MovingNPC = new MovingNPC(spritePatch, rangeX, rangeY)
+	def apply(job:Job, rangeX:Float, rangeY:Float):MovingNPC = new MovingNPC(job, rangeX, rangeY)
 
 	private val TAG:String = MovingNPC.getClass().getSimpleName()
 }

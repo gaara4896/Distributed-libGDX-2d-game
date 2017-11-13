@@ -8,9 +8,9 @@ import my.game.pkg.entity.utils.Direction
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
 import my.game.pkg.entity.utils.State._
-import my.game.pkg.assets.AssetsManager
+import my.game.pkg.entity.utils.Job._
 
-class Player(patch:Int) extends PlayerEntity(patch) {
+class Player(job:Job) extends PlayerEntity(job) {
 	
 	/**
 	 * Update the player to latest status
@@ -30,27 +30,24 @@ class Player(patch:Int) extends PlayerEntity(patch) {
 			currentDirection match{
 				case Direction.LEFT =>
 					nextPosition.x = position.x - velocity.x
-					nextPosition.y = position.y
-					currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
+					nextPosition.y = position.y	
 				case Direction.RIGHT =>
 					nextPosition.x = position.x + velocity.x
 					nextPosition.y = position.y
-					currentFrame = walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
 					nextPosition.y = position.y + velocity.y
 					nextPosition.x = position.x
-					currentFrame = walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
 					nextPosition.y = position.y - velocity.y
 					nextPosition.x = position.x
-					currentFrame = walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
+			currentFrame = EntitySprite.getAnimation(job, direction).getKeyFrame(frameTime)
 		}
 		velocity.scl(1 / delta)
 		setBoundingSize(0f, 0.5f)
 		game.client match{
-			case Some(x) => x.update(delta, patch, MainGameScreen.mapMgr.currentMapName, position.x, position.y, currentDirection, currentState:State, frameTime)
+			case Some(x) => x.update(delta, job, MainGameScreen.mapMgr.currentMapName, position.x, position.y, currentDirection, currentState:State, frameTime)
 			case None => 
 		}
 	}
@@ -80,7 +77,7 @@ class Player(patch:Int) extends PlayerEntity(patch) {
 	 * Dispose of asset when not needed
 	 */
 	def dispose(){
-		AssetsManager.unloadAsset(defaultSpritePatch)
+		EntitySprite.dispose()
 	}
 }
 
@@ -90,7 +87,7 @@ object Player{
 		* Apply method for creating Player
 		* @return Player New instance of Player
 		*/
-	def apply(patch:Int):Player = new Player(patch)
+	def apply(job:Job):Player = new Player(job)
 
 	private val TAG:String = Player.getClass().getSimpleName()
 }

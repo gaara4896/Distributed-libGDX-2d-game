@@ -3,17 +3,18 @@ package my.game.pkg.entity.npc
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 
-import my.game.pkg.entity.{MovingNPC, Entity}
+import my.game.pkg.entity.MovingNPC
+import my.game.pkg.entity.utils.Job
 
 class TopWorldNPCs extends MapNPCs {
 
 	var firstMove = true
 	var firstUpdate = true
 
-	val topWorldMovingNPC1 = MovingNPC(Entity.spritePatchWarrior, 0.5f, 5f)
-	val topWorldMovingNPC2 = MovingNPC(Entity.spritePatchWarrior, 1f, 4.5292f)
-	val topWorldMovingNPC3 = MovingNPC(Entity.spritePatchMage, 7.3f, 2f)
-	val topWorldMovingNPC4 = MovingNPC(Entity.spritePatchPaladin, 22f, 9.5f)
+	val topWorldMovingNPC1 = MovingNPC(Job.WARRIOR, 0.5f, 5f)
+	val topWorldMovingNPC2 = MovingNPC(Job.WARRIOR, 1f, 4.5292f)
+	val topWorldMovingNPC3 = MovingNPC(Job.MAGE, 7.3f, 2f)
+	val topWorldMovingNPC4 = MovingNPC(Job.PALADIN, 22f, 9.5f)
 
 	/**
 	 * Initialize NPCs position

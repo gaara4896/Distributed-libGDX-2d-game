@@ -3,18 +3,18 @@ package my.game.pkg.entity.npc
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
 
-import my.game.pkg.entity.{MovingNPC, NPC, Entity}
-import my.game.pkg.entity.utils.Direction
+import my.game.pkg.entity.{MovingNPC, NPC}
+import my.game.pkg.entity.utils.{Direction, Job}
 
 class TownNPCs extends MapNPCs {
 
 	var firstMove = true
 	var firstUpdate = true
 
-	val townMovingNPC1 = MovingNPC(Entity.spritePatchRogue, 11, 3)
-	val townMovingNPC2 = MovingNPC(Entity.spritePatchEngineer, 1f, 5.1467f)
-	val townNPC1 = NPC(Entity.spritePatchWarrior, Direction.DOWN)
-	val townNPC2 = NPC(Entity.spritePatchPaladin, Direction.DOWN)
+	val townMovingNPC1 = MovingNPC(Job.ROGUE, 11, 3)
+	val townMovingNPC2 = MovingNPC(Job.ENGINEER, 1f, 5.1467f)
+	val townNPC1 = NPC(Job.WARRIOR, Direction.DOWN)
+	val townNPC2 = NPC(Job.PALADIN, Direction.DOWN)
 
 	/**
 	 * Initialize NPCs position
