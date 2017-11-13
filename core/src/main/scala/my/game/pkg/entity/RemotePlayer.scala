@@ -5,7 +5,7 @@ import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State
 import my.game.pkg.entity.utils.State._
 
-class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
+class RemotePlayer(val uuid:String, patch:Int, x:Float, y:Float) extends PlayerEntity(patch) {
 
 	position.x = x
 	position.y = y
@@ -23,19 +23,19 @@ class RemotePlayer(val uuid:String, x:Float, y:Float) extends PlayerEntity {
 				case Direction.LEFT =>
 					nextPosition.x = position.x - velocity.x
 					nextPosition.y = position.y
-					currentFrame = PlayerEntity.walkLeftAnimation.getKeyFrame(frameTime)
+					currentFrame = walkLeftAnimation.getKeyFrame(frameTime)
 				case Direction.RIGHT =>
 					nextPosition.x = position.x + velocity.x
 					nextPosition.y = position.y
-					currentFrame = PlayerEntity.walkRightAnimation.getKeyFrame(frameTime)
+					currentFrame = walkRightAnimation.getKeyFrame(frameTime)
 				case Direction.UP =>
 					nextPosition.y = position.y + velocity.y
 					nextPosition.x = position.x
-					currentFrame = PlayerEntity.walkUpAnimation.getKeyFrame(frameTime)
+					currentFrame = walkUpAnimation.getKeyFrame(frameTime)
 				case Direction.DOWN =>
 					nextPosition.y = position.y - velocity.y
 					nextPosition.x = position.x
-					currentFrame = PlayerEntity.walkDownAnimation.getKeyFrame(frameTime)
+					currentFrame = walkDownAnimation.getKeyFrame(frameTime)
 				case _ =>
 			}
 		}
@@ -90,7 +90,7 @@ object RemotePlayer{
 	 * @param  y:Float             X position of the player
 	 * @return RemotePlayer        New instance of RemotePlayer
 	 */
-	def apply(uuid:String, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, x, y)
+	def apply(uuid:String, patch:Int, x:Float, y:Float):RemotePlayer = new RemotePlayer(uuid, patch, x, y)
 
 	private val TAG:String = RemotePlayer.getClass().getSimpleName()
 }

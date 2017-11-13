@@ -34,8 +34,8 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		 * @param  x:Float X position of player
 		 * @param  y:Float Y position of player
 		 */
-		def standStill(x:Float, y:Float){
-			game.gameUUID.foreach{uuid => clientActor ! StandStill(uuid, MainGameScreen.mapMgr.currentMapName, x, y)}
+		def standStill(patch:Int, x:Float, y:Float){
+			game.gameUUID.foreach{uuid => clientActor ! StandStill(uuid, patch, MainGameScreen.mapMgr.currentMapName, x, y)}
 		}
 
 		/**
@@ -45,8 +45,8 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		 * @param  x:Float        X position of player starting point
 		 * @param  y:Float        Y position of player starting point
 		 */
-		def changeMap(mapFrom:String, mapTo:String, x:Float, y:Float){
-			game.gameUUID.foreach{uuid => clientActor ! ChangeMap(uuid, mapFrom, mapTo, x, y)}
+		def changeMap(patch:Int, mapFrom:String, mapTo:String, x:Float, y:Float){
+			game.gameUUID.foreach{uuid => clientActor ! ChangeMap(uuid, patch, mapFrom, mapTo, x, y)}
 		}
 
 		/**
@@ -59,10 +59,10 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		 * @param  state:State         State of the player
 		 * @param  frameTime:Float     Frame time of player
 		 */
-		def update(delta:Float, map:String, x:Float, y:Float, direction:Direction, state:State, frameTime:Float){
+		def update(delta:Float, patch:Int, map:String, x:Float, y:Float, direction:Direction, state:State, frameTime:Float){
 			timeToPing -= delta
 			if(timeToPing <= 0){
-				game.gameUUID.foreach{uuid => clientActor ! Alive(uuid, map, x, y, direction, state, frameTime)}
+				game.gameUUID.foreach{uuid => clientActor ! Alive(uuid, patch, map, x, y, direction, state, frameTime)}
 				timeToPing = 1.4f
 			}
 		}
