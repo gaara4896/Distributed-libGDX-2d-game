@@ -18,6 +18,7 @@ abstract class PlayerEntity(val patch:Int) extends Entity{
 	val boundingBox = new Rectangle()
 
 	val defaultSpritePatch:String = setupPatch(patch)
+	println(defaultSpritePatch)
 
 	AssetsManager.loadTextureAsset(defaultSpritePatch)
 	val texture:Option[Texture] = AssetsManager.getTextureAsset(defaultSpritePatch)
@@ -50,11 +51,14 @@ abstract class PlayerEntity(val patch:Int) extends Entity{
 	//set player's patch according to patch:Int
 	def setupPatch(patch:Int): String ={
 		patch match{
-				case 0 => return Entity.spritePatchWarrior
-				case 1 => return Entity.spritePatchRogue
-				case 2 => return Entity.spritePatchMage
-				case 3 => return Entity.spritePatchPaladin
-				case 4 => return Entity.spritePatchEngineer
+				case 0 => Entity.spritePatchWarrior
+				case 1 => Entity.spritePatchRogue
+				case 2 => Entity.spritePatchMage
+				case 3 => Entity.spritePatchPaladin
+				case 4 => Entity.spritePatchEngineer
+				case _ => 
+					println("Undeterministic")
+					Entity.spritePatchWarrior
 		}
 	}
 

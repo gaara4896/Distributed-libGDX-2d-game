@@ -12,7 +12,6 @@ import my.game.pkg.assets.AssetsManager
 
 class Player(patch:Int) extends PlayerEntity(patch) {
 	
-
 	/**
 	 * Update the player to latest status
 	 * @param delta:Float                  Delta time value of the frame
