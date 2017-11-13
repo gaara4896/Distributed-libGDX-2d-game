@@ -57,6 +57,7 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 		 * @param  y:Float             Y position of the player
 		 * @param  direction:Direction Direction of the player
 		 * @param  state:State         State of the player
+		 * @param  frameTime:Float     Frame time of player
 		 */
 		def update(delta:Float, patch:Int, map:String, x:Float, y:Float, direction:Direction, state:State, frameTime:Float){
 			timeToPing -= delta
