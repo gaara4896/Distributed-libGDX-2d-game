@@ -38,10 +38,11 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case StandStill(uuid, job, map, x, y) => remoteGameServer ! StandStill(uuid, job, map, x, y)
 		case ChangeMap(uuid, job, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, job, mapFrom, mapTo, x, y)
 		case Alive(uuid, job, map, x, y, direction, state, frameTime) => remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
+		case Join(uuid, map) => remoteGameServer ! Join(uuid, map)
 		case Ping => MainGameScreen.pingFromServer = 3f
 
 		case PlayerMove(uuid, direction) => 
-			if(!uuid.equals(game.gameUUID)){
+			if(!uuid.equals(game.gameUUID.get)){
 				breakable{
 					for(remotePlayer <- MainGameScreen.remotePlayers){
 						if(remotePlayer.uuid.equals(uuid)){
@@ -53,7 +54,7 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 			}
 
 		case PlayerStandStill(uuid, job, x, y) =>
-			if(!uuid.equals(game.gameUUID)){
+			if(!uuid.equals(game.gameUUID.get)){
 				var exist:Boolean = false
 				breakable{
 					for(remotePlayer <- MainGameScreen.remotePlayers){
@@ -70,27 +71,31 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 			}
 		
 		case Correction(uuid, job, x, y, direction, playerState, frameTime) =>
-			var exist:Boolean = false
-			breakable{
-				for(remotePlayer <- MainGameScreen.remotePlayers){
-					if(remotePlayer.uuid.equals(uuid)){
-						remotePlayer.correction(x, y, direction, playerState, frameTime)
-						exist = true
-						break
+			if(!uuid.equals(game.gameUUID.get)){
+				var exist:Boolean = false
+				breakable{
+					for(remotePlayer <- MainGameScreen.remotePlayers){
+						if(remotePlayer.uuid.equals(uuid)){
+							remotePlayer.correction(x, y, direction, playerState, frameTime)
+							exist = true
+							break
+						}
 					}
 				}
-			}
-			if(!exist){
-				MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
+				if(!exist){
+					MainGameScreen.remotePlayers += RemotePlayer(uuid, job, x, y)
+				}
 			}
 		
 		case KillPlayer(uuid) => breakable{
 				for(remotePlayer <- MainGameScreen.remotePlayers){
 					if(remotePlayer.uuid.equals(uuid)){
 						MainGameScreen.remotePlayers -= remotePlayer
+						break
 					}
 				}
 			}
+		case _ => println("Connected but unknown")
 	}
 }
 

@@ -47,6 +47,8 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		MainGameScreen.player.move()
 		MainGameScreen.npc.init()
 		Gdx.input.setInputProcessor(MainGameScreen.controller)
+
+		game.client.foreach{x => x.join(MainGameScreen.mapMgr.currentMapName)}
 	}
 
 	/**

@@ -22,6 +22,10 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 			game.gameUUID.foreach{uuid => clientActor ! Quit(uuid)}
 		}
 
+		def join(map:String){
+			game.gameUUID.foreach{uuid => clientActor ! Join(uuid, map)}
+		}
+
 		/**
 		 * Update server when moved
 		 * @param  direction:Direction Direction of the player
