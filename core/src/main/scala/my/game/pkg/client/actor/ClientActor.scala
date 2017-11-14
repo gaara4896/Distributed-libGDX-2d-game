@@ -33,13 +33,15 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 	 */
 	def connected:Receive = {
 		case Quit(uuid) => remoteConnection ! Quit(uuid)
-		case Disconnected => context.unbecome()
+		case Disconnected => 
+			context.unbecome()
+			remoteConnection ! Quit(game.gameUUID.get)
 		case Move(uuid, map, direction) => remoteGameServer ! Move(uuid, map, direction)
 		case StandStill(uuid, job, map, x, y) => remoteGameServer ! StandStill(uuid, job, map, x, y)
 		case ChangeMap(uuid, job, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, job, mapFrom, mapTo, x, y)
 		case Alive(uuid, job, map, x, y, direction, state, frameTime) => remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
 		case Join(uuid, map) => remoteGameServer ! Join(uuid, map)
-		case Ping => MainGameScreen.pingFromServer = 3f
+		case Ping => MainGameScreen.pingFromServer = 5f
 
 		case PlayerMove(uuid, direction) => 
 			if(!uuid.equals(game.gameUUID.get)){
