@@ -48,6 +48,9 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		MainGameScreen.npc.init()
 		Gdx.input.setInputProcessor(MainGameScreen.controller)
 
+		MainGameScreen.remotePlayers.clear
+		MainGameScreen.pingFromServer = 10f
+
 		game.client.foreach{x => x.join(MainGameScreen.mapMgr.currentMapName)}
 	}
 
@@ -214,7 +217,7 @@ object MainGameScreen {
 	var mapMgr:MapManager = MapManager()
 
 	var npc = MapNPCs(MapManager.TOWN)
-	var job= Job.WARRIOR
+	var job = Job.WARRIOR
 	var controller:PlayerController = null
 	var player:Player = null
 	val remotePlayers = new ListBuffer[RemotePlayer]()
