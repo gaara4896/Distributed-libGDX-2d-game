@@ -3,7 +3,6 @@ package my.game.pkg.entity
 import com.badlogic.gdx.math.Vector2
 
 import my.game.pkg.entity.utils.{Direction, State}
-import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.Job._
 
 import scala.collection.mutable.Queue
@@ -13,7 +12,6 @@ class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, D
 
 	val velocity = new Vector2(3f, 3f)
 	var directionSequence = Queue(Direction.DOWN, Direction.LEFT, Direction.UP)
-	var walkingDirection:Direction = Direction.RIGHT
 	var countDownRange:Float = rangeX
 	var restTime:Float = 0
 	state = State.WALKING
@@ -28,9 +26,9 @@ class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, D
 				restTime -= delta
 				if(restTime <= 0) {
 					state = State.WALKING
-					directionSequence += walkingDirection
-					walkingDirection = directionSequence.dequeue()
-					if(walkingDirection == Direction.RIGHT || walkingDirection == Direction.LEFT){
+					directionSequence += currentDirection
+					currentDirection = directionSequence.dequeue()
+					if(currentDirection == Direction.RIGHT || currentDirection == Direction.LEFT){
 						countDownRange = rangeX
 					} else {
 						countDownRange = rangeY
@@ -39,7 +37,7 @@ class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, D
 			case State.WALKING => 
 				frameTime += delta
 				velocity.scl(delta)
-				walkingDirection match{
+				currentDirection match{
 					case Direction.LEFT =>
 						position.x -= velocity.x
 						frameSprite.setX(position.x)
@@ -58,7 +56,7 @@ class MovingNPC (job:Job, val rangeX:Float, val rangeY:Float) extends NPC(job, D
 						countDownRange -= velocity.y
 					case _ =>
 				}
-				currentFrame = EntitySprite.getAnimation(job, walkingDirection).getKeyFrame(frameTime)
+				currentFrame = EntitySprite.getAnimation(job, currentDirection).getKeyFrame(frameTime)
 				velocity.scl(1 / delta)
 				if(countDownRange <= 0){
 					state = State.IDLE

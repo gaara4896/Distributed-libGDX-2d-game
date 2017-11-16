@@ -8,9 +8,6 @@ import my.game.pkg.entity.utils.Job
 
 class TopWorldNPCs extends MapNPCs {
 
-	var firstMove = true
-	var firstUpdate = true
-
 	val topWorldMovingNPC1 = MovingNPC(Job.WARRIOR, 0.5f, 5f)
 	val topWorldMovingNPC2 = MovingNPC(Job.WARRIOR, 1f, 4.5292f)
 	val topWorldMovingNPC3 = MovingNPC(Job.MAGE, 7.3f, 2f)

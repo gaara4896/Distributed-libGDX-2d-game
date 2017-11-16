@@ -78,6 +78,7 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 				timeToPing = 1.4f
 			}
 			MainGameScreen.pingFromServer -= delta
+			println(MainGameScreen.pingFromServer)
 			if(MainGameScreen.pingFromServer <= 0){
 				game.connectServerScreen.updateConnection(false)
 				game.setScreen(game.connectServerScreen)

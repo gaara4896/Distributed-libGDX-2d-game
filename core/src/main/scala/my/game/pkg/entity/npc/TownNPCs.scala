@@ -8,9 +8,6 @@ import my.game.pkg.entity.utils.{Direction, Job}
 
 class TownNPCs extends MapNPCs {
 
-	var firstMove = true
-	var firstUpdate = true
-
 	val townMovingNPC1 = MovingNPC(Job.ROGUE, 11, 3)
 	val townMovingNPC2 = MovingNPC(Job.ENGINEER, 1f, 5.1467f)
 	val townNPC1 = NPC(Job.WARRIOR, Direction.DOWN)

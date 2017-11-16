@@ -35,6 +35,7 @@ object MapNPCs{
 			case MapManager.TOWN => TownNPCs()
 			case MapManager.TOP_WORLD =>  TopWorldNPCs()
 			case MapManager.CASTLE_OF_DOOM => CastleOfDoomNPCs()
+			case "Server" => ServerNPCs()
 			case _ => TownNPCs()
 		}
 	}

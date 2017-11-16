@@ -45,7 +45,10 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 		MainGameScreen.player.move()
-		MainGameScreen.npc.init()
+		game.client match{
+			case Some(x) => MainGameScreen.npc = MapNPCs("Server")
+			case None => MainGameScreen.npc.init()
+		}
 		Gdx.input.setInputProcessor(MainGameScreen.controller)
 
 		MainGameScreen.remotePlayers.clear
@@ -183,8 +186,12 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					MainGameScreen.mapMgr.loadMap(mapName)
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 
-					MainGameScreen.npc = MapNPCs(mapName)
-					MainGameScreen.npc.init()
+					game.client match{
+						case Some(x) => MainGameScreen.npc = MapNPCs("Server")
+						case None => 
+							MainGameScreen.npc = MapNPCs(mapName)
+							MainGameScreen.npc.init()
+					}
 
 					mapRenderer.setMap(MainGameScreen.mapMgr.currentMap)
 					Gdx.app.debug(MainGameScreen.TAG, "Portal Activated")
