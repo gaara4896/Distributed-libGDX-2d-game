@@ -46,7 +46,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 		MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 		MainGameScreen.player.move()
 		game.client match{
-			case Some(x) => MainGameScreen.npc = MapNPCs("Server")
+			case Some(_) => MainGameScreen.npc = MapNPCs("Server")
 			case None => MainGameScreen.npc.init()
 		}
 		Gdx.input.setInputProcessor(MainGameScreen.controller)
@@ -187,7 +187,7 @@ class MainGameScreen(val game:Distributedlibgdx2dgame) extends Screen{
 					MainGameScreen.player.init(MainGameScreen.mapMgr.getPlayerStartUnitScaled)
 
 					game.client match{
-						case Some(x) => MainGameScreen.npc = MapNPCs("Server")
+						case Some(_) => MainGameScreen.npc = MapNPCs("Server")
 						case None => 
 							MainGameScreen.npc = MapNPCs(mapName)
 							MainGameScreen.npc.init()
@@ -228,7 +228,7 @@ object MainGameScreen {
 	var controller:PlayerController = null
 	var player:Player = null
 	val remotePlayers = new ListBuffer[RemotePlayer]()
-	var pingFromServer = 10f
+	var pingFromServer = 3f
 
 	private object VIEWPORT{
 		var viewportWidth:Float = 0

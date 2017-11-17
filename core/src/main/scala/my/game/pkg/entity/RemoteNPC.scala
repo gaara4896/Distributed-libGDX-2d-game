@@ -11,6 +11,10 @@ class RemoteNPC(val uuid:String, job:Job, direction:Direction) extends NPC(job, 
 	val velocity = new Vector2(3f, 3f)
 	var countDownRange:Float = 0
 
+	/**
+	 * Update NPC status
+	 * @param  delta:Float Delta time fo the frame
+	 */
 	def update(delta:Float){
 		state match{
 			case State.IDLE => 
@@ -47,6 +51,16 @@ class RemoteNPC(val uuid:String, job:Job, direction:Direction) extends NPC(job, 
 
 object RemoteNPC{
 
+	/**
+	 * Apply method for creating RemoteNPC
+	 * @param  uuid:String         UUID of the NPC
+	 * @param  job:Job             Job of the NPC
+	 * @param  direction:Direction Direction of the NPC
+	 * @param  x:Float             X position of NPC
+	 * @param  y:Float             Y position of NPC
+	 * @param  range:Float         Range NPC going to move
+	 * @return RemoteNPC           New instance of RemoteNPC
+	 */
 	def apply(uuid:String, job:Job, direction:Direction, x:Float, y:Float, range:Float): RemoteNPC = {
 		new RemoteNPC(uuid, job, direction){
 			position.x = x

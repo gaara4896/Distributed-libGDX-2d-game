@@ -5,7 +5,7 @@ import akka.actor.{ActorSystem, Props}
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.screen.MainGameScreen
 import my.game.pkg.client.actor.ClientActor
-import my.game.pkg.client.dictionary.ClientDictionary._
+import my.game.server.dictionary.ServerDictionary._
 import my.game.pkg.entity.utils.Direction._
 import my.game.pkg.entity.utils.State._
 import my.game.pkg.entity.utils.Job._
@@ -78,7 +78,6 @@ class Client(ipAddress:String, port:String, game:Distributedlibgdx2dgame){
 				timeToPing = 1.4f
 			}
 			MainGameScreen.pingFromServer -= delta
-			println(MainGameScreen.pingFromServer)
 			if(MainGameScreen.pingFromServer <= 0){
 				game.connectServerScreen.updateConnection(false)
 				game.setScreen(game.connectServerScreen)

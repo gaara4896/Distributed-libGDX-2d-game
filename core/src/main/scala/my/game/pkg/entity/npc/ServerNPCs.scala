@@ -42,6 +42,14 @@ class ServerNPCs extends MapNPCs {
 		npcList.foreach{npc => batch.draw(npc.currentFrame, npc.frameSprite.getX, npc.frameSprite.getY, 1, 1)}
 	}
 
+	/**
+	 * Move NPC when NPC is IDLE
+	 * @param  uuid:String         UUID of the NPC
+	 * @param  direction:Direction Direction of NPC
+	 * @param  x:Float             X position of NPC
+	 * @param  y:Float             Y position of NPC
+	 * @param  range:Float         Range of the NPC going to walk
+	 */
 	def moveNpc(uuid:String, direction:Direction, x:Float, y:Float, range:Float){
 		breakable{
 			npcList.foreach{npc =>

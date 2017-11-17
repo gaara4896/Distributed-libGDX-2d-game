@@ -1,6 +1,7 @@
 package my.game.pkg.client.actor
 
 import akka.actor.Actor
+
 import my.game.pkg.Distributedlibgdx2dgame
 import my.game.pkg.screen.MainGameScreen
 import my.game.pkg.entity.RemotePlayer
@@ -42,7 +43,7 @@ class ClientActor(val ipAddress:String, val port:String, val game:Distributedlib
 		case ChangeMap(uuid, job, mapFrom, mapTo, x, y) => remoteGameServer ! ChangeMap(uuid, job, mapFrom, mapTo, x, y)
 		case Alive(uuid, job, map, x, y, direction, state, frameTime) => remoteGameServer ! Alive(uuid, job, map, x, y, direction, state, frameTime)
 		case Join(uuid, map) => remoteGameServer ! Join(uuid, map)
-		case Ping => MainGameScreen.pingFromServer = 5f
+		case Ping => MainGameScreen.pingFromServer = 3f
 		case NPCInit(serverNpcList) => MainGameScreen.npc.asInstanceOf[ServerNPCs].init(serverNpcList)
 		case NPCMove(uuid, direction, x, y, range) => MainGameScreen.npc.asInstanceOf[ServerNPCs].moveNpc(uuid, direction, x, y, range)
 
