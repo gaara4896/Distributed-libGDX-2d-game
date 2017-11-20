@@ -1,0 +1,2 @@
+sbt
+desktop/run

@@ -1,6 +1,26 @@
 ## Entry point
 
--keep public class my.game.pkg.Main
+-keep class my.game.pkg.** { *; }
+-dontwarn myy.game.pkg.**
+-keep class my.game.server.** { *; }
+-dontwarn my.game.server.**
+-keep class my.** { *; }
+-dontwarn my.**
+-keep class com.** { *; }
+-dontwarn com.**
+-keep class org.** { *; }
+-dontwarn org.**
+-keep class java.** { *; }
+-dontwarn java.**
+-keep class akka.** { *; }
+-dontwarn akka.**
+-keep class scala.** { *; }
+-dontwarn scala.**
+
+#-injars akka-testkit_2.12-2.5.6.jar
+#-injars akka-remote_2.12-2.5.6.jar(!reference.conf)
+#-injars akka-stream_2.12-2.5.6.jar(!reference.conf)
+#-injars ssl-config-core_2.12-0.2.2.jar(!reference.conf)
 
 ## LibGDX
 
